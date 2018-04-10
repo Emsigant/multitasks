@@ -1,0 +1,25 @@
+.login-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+.login-frame {
+  margin-top: 100px;
+  width: 270px;
+}
+.login-header {
+  text-align: center;
+  font-size: 2rem;
+}
+.danger {
+  color: red;
+  line-height: 1rem;
+  margin-bottom: .25rem;
+  font-size: .9rem;
+}
+.frame-footer {
+  text-align: center;
+  margin-top: 0.5rem;
+}

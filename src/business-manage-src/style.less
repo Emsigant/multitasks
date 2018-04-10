@@ -1,0 +1,55 @@
+@theme-color-0: #002766;
+@theme-color-9: #003a8c;
+@theme-color-8: #0050b3;
+@theme-color-7: #096dd9;
+@theme-color-6: #1890ff;
+@theme-color-5: #40a9ff;
+@theme-color-4: #69c0ff;
+@theme-color-3: #91d5ff;
+@theme-color-2: #bae7ff;
+@theme-color-1: #e6f7ff;
+
+@side-bar-width: 300px;
+
+@main-font-color: #262626;
+
+body {
+    color: @main-font-color;
+}
+
+.app-container {
+    width: 100vw;
+}
+
+.side-bar {
+    width: @side-bar-width;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: @theme-color-6;
+    .side-bar-header {
+        padding: 1rem;
+        font-size: 1.25rem;
+        color: #fff;
+    }
+    .menu-item-list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        .menu-item {
+            padding: .75rem 1rem;
+            color: #fff;
+            display: block;
+            text-decoration: none;
+            color: #fff;
+        }
+        .active-menu-item {
+            background: @theme-color-7;
+        }
+    }
+}
+
+.content {
+    margin-left: @side-bar-width;
+}
