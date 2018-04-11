@@ -28,7 +28,7 @@ function Certification(state, action) {
             {
                 return {
                     ...state,
-                    msg: action.data
+                    data: action.data
                 }
             }
         case ACTIONS_CONSTS.CER.CER_DATA_STATUS_CHANGE:
@@ -36,18 +36,28 @@ function Certification(state, action) {
                 let status = action.status;
                 if (status === 'rejected') {
                     message.error(FAIL_INFOS.FETCH, 1);
+                    return {
+                        ...state,
+                        status,
+                        msg: FAIL_INFOS.FETCH
+                    }
                 } else if (status === 'resolved') {
                     message.success(SUCC_INFOS.FETCH, 1);
+                    
+                } else if (status === 'pending') {
+
                 }
                 return {
                     ...state,
                     status
                 }
+                
             }
         case ACTIONS_CONSTS.CER.CER_CLEAR:
             {
                 return {
                     ...state,
+                    data: [],
                     msg: ''
                 }
             }
@@ -55,7 +65,8 @@ function Certification(state, action) {
             {
                 return {
                     status: 'pending',
-                    msg: ''
+                    msg: '',
+                    data: null
                 }
             }
     }

@@ -8,17 +8,15 @@
 @theme-color-3: #91d5ff;
 @theme-color-2: #bae7ff;
 @theme-color-1: #e6f7ff;
-
 @side-bar-width: 300px;
-
 @main-font-color: #262626;
-
+@route-view-padding: 1rem;
 body {
     color: @main-font-color;
 }
 
 .app-container {
-    width: 100vw;
+    width: 100%;
 }
 
 .side-bar {
@@ -52,4 +50,40 @@ body {
 
 .content {
     margin-left: @side-bar-width;
+    box-sizing: border-box;
+}
+
+.route-view {
+    padding: @route-view-padding;
+    box-sizing: border-box;
+}
+
+.plain-list-item {
+    display: flex;
+}
+
+.plain-list-key {
+    width: 10rem;
+    flex: none;
+    align-items: center;
+    display: flex;
+}
+
+.plain-list-value {
+    flex: 1;
+}
+
+.modal-content {
+    padding: 1rem;
+    img {
+        width: 100%;
+    }
+}
+.plain-div {
+    margin-top: 1rem;
+    width: 300px;
+    .form-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
 }

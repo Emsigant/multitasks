@@ -11,7 +11,8 @@ const COMMON_FETCH_OPTIONS = {
 
 // apis
 const APIS = {
-    BUSINESS_AUTH_QUERY: '/business/auth/query'
+    BUSINESS_AUTH_QUERY: '/business/auth/query',
+    BUSINESS_AUTH_SUBMIT:'/business/auth'
 };
 
 // business auth actions
@@ -49,8 +50,15 @@ export function CerFetchData() {
         if (ENV === 'dev') {
             setTimeout(() => {
                 let random = Math.random();
-                if (random > .5) {
-                    dispatch(CerData('this is a message, random=' + random));
+                if (random > 0) {
+                    dispatch(CerData({
+                        userId: '000001',
+                        userName: 'a business',
+                        bankCardNo:'10342948292',
+                        bankName:'bankaccountname',
+                        authImageUrl: 'some value',
+                        status: '2'
+                    }));
                     dispatch(CerStatus('resolved'));
                 } else {
                     dispatch(CerData('this is a fail message, random=' + random));
@@ -64,7 +72,8 @@ export function CerFetchData() {
                 })
                 .then(resp => resp.json())
                 .then(resp => {
-                    // resp callback
+                    // success
+                    let data = resp.content.dataList[0];
                 })
                 .catch(err => {
                     console.log(err);
