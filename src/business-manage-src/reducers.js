@@ -51,7 +51,6 @@ function Certification(state, action) {
                     ...state,
                     status
                 }
-                
             }
         case ACTIONS_CONSTS.CER.CER_CLEAR:
             {
@@ -61,12 +60,34 @@ function Certification(state, action) {
                     msg: ''
                 }
             }
+        case ACTIONS_CONSTS.CER.CER_SUBMIT_STATUS_CHANGE:
+            {
+                let status = action.status;
+                if (status === 'rejected') {
+                    message.error(FAIL_INFOS.SUBMIT, 1);
+                    return {
+                        ...state,
+                        submitStatus: status,
+                        msg: FAIL_INFOS.FETCH
+                    }
+                } else if (status === 'resolved') {
+                    message.success(SUCC_INFOS.SUBMIT, 1);
+                    
+                } else if (status === 'pending') {
+
+                }
+                return {
+                    ...state,
+                    submitStatus: status,
+                }
+            }
         default:
             {
                 return {
                     status: 'pending',
                     msg: '',
-                    data: null
+                    data: null,
+                    submitStatus: 'no-status'
                 }
             }
     }

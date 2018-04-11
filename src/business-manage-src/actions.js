@@ -1,5 +1,5 @@
 // mode: dev or prod
-const ENV = 'dev'; 
+const ENV = 'prod';
 
 // common fetch options
 const COMMON_FETCH_OPTIONS = {
@@ -12,7 +12,7 @@ const COMMON_FETCH_OPTIONS = {
 // apis
 const APIS = {
     BUSINESS_AUTH_QUERY: '/business/auth/query',
-    BUSINESS_AUTH_SUBMIT:'/business/auth'
+    BUSINESS_AUTH_SUBMIT: '/business/auth'
 };
 
 // business auth actions
@@ -32,7 +32,7 @@ export function CerData(data) {
         data
     }
 }
-export function CerStatus(status) {
+export function CerDataStatus(status) {
     return {
         type: ACTIONS_CONSTS.CER.CER_DATA_STATUS_CHANGE,
         status
@@ -45,24 +45,24 @@ export function CerClear() {
 }
 export function CerFetchData() {
     return (dispatch, getState) => {
-        dispatch(CerStatus('pending'));
+        dispatch(CerDataStatus('pending'));
         dispatch(CerClear());
         if (ENV === 'dev') {
             setTimeout(() => {
                 let random = Math.random();
                 if (random > 0) {
                     dispatch(CerData({
-                        userId: '000001',
-                        userName: 'a business',
-                        bankCardNo:'10342948292',
-                        bankName:'bankaccountname',
-                        authImageUrl: 'some value',
-                        status: '2'
+                        // userId: '000001',
+                        // userName: 'a business',
+                        // bankCardNo:'10342948292',
+                        // bankName:'bankaccountname',
+                        // authImageUrl: 'some value',
+                        // status: '2'
                     }));
-                    dispatch(CerStatus('resolved'));
+                    dispatch(CerDataStatus('resolved'));
                 } else {
                     dispatch(CerData('this is a fail message, random=' + random));
-                    dispatch(CerStatus('rejected'));
+                    dispatch(CerDataStatus('rejected'));
                 }
             }, 500);
         } else {
@@ -73,11 +73,50 @@ export function CerFetchData() {
                 .then(resp => resp.json())
                 .then(resp => {
                     // success
-                    let data = resp.content.dataList[0];
+                    if(resp.code === '1') {
+                        let data = resp.content;
+                        dispatch(CerData(data));
+                        dispatch(CerDataStatus('resolved'))
+                    } else {
+                        dispatch(CerDataStatus('rejected'))
+                    }
                 })
                 .catch(err => {
-                    console.log(err);
+                    dispatch(CerDataStatus('rejected'))
                 });
+        }
+    }
+}
+export function CerSubmitStatusChange(status) {
+    return {
+        type: ACTIONS_CONSTS.CER.CER_SUBMIT_STATUS_CHANGE,
+        status
+    }
+}
+export function CerSubmit(data) {
+    return (dispatch, getState) => {
+        dispatch(CerSubmitStatusChange('pending'));
+        if (ENV === 'dev') {
+            setTimeout(() => {
+                dispatch(CerSubmitStatusChange('rejected'));
+            }, 500);
+        } else {
+            fetch(APIS.BUSINESS_AUTH_SUBMIT, {
+                method: 'post',
+                body: JSON.stringify(data),
+                ...COMMON_FETCH_OPTIONS
+            })
+            .then(resp => resp.json())
+            .then(resp => {
+                if(resp.code === '1') {
+                    dispatch(CerSubmitStatusChange('resolved'));
+                } else {
+                    dispatch(CerSubmitStatusChange('rejected'));
+                }
+            })
+            .catch(err => {
+                dispatch(CerSubmitStatusChange('rejected'));
+            });
         }
     }
 }

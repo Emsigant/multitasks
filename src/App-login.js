@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import 'antd/dist/antd.css';
+
 import { Input, Button, Icon, message } from 'antd';
 import { HashRouter, Link, Route, Switch } from 'react-router-dom';
 
