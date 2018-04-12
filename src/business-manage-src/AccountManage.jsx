@@ -45,7 +45,7 @@ class AccountManage extends Component {
     componentWillReceiveProps(newProps) {
         let currentStatus = newProps.submitStatus;
         CommonMessage(currentStatus, 'UPDATE');
-        if (newProps.submitStatus === 'resolved') {
+        if (currentStatus === 'resolved' || currentStatus === 'invalid') {
             this.setState({
                 oldP: '',
                 newP: '',
@@ -64,6 +64,7 @@ class AccountManage extends Component {
     render() {
         let { dispatch, submitStatus } = this.props;
         let { oldP, oldPT, newP, newPT } = this.state;
+        let showSamePswWarning = oldP === newP && newPT && oldP && newP;
         return (
             <div className="route-view">
                 <WrappedInput
@@ -90,7 +91,7 @@ class AccountManage extends Component {
                     onClick={() => this.submitNewPsw()}
                 >修改密码</Button>
                 {
-                    oldP === newP && newPT && oldP && newP ?
+                    showSamePswWarning ?
                         <span className="warning-span">
                             新密码应该和旧密码不同
                         </span> :

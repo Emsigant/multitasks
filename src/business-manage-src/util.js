@@ -17,15 +17,39 @@ const SUCC_INFOS = {
 
 /**
  * 
- * @param {string} currentStatus 
- * @param {string} actionType oneof['rejected', 'resolved', 'pending','invalid','init']
+ * @param {string} currentStatus oneof['rejected', 'resolved', 'init','pending','invalid']
+ * @param {string} actionType oneof['UPDATE', 'SUBMIT', 'FETCH','DELETE']
  */
 export function CommonMessage(currentStatus, actionType) {
-    if (currentStatus === 'rejected') {
-        message.error(FAIL_INFOS[actionType], 1);
-    } else if(currentStatus === 'resolved') {
-        message.success(SUCC_INFOS[actionType], 1);
-    } else if(currentStatus === 'invalid') {
-        message.error('旧密码不正确，请重试', 1);
+    switch (currentStatus) {
+        case 'rejected':
+            {
+                message.error(FAIL_INFOS[actionType], 1);
+            }
+            break;
+        case 'resolved':
+            {
+                message.success(SUCC_INFOS[actionType], 1);
+            }
+            break;
+        case 'invalid':
+            {
+                message.error('旧密码不正确，请重试', 1);
+            }
+            break;
+        case 'init':
+            {
+
+            }
+            break;
+        case 'pending':
+            {
+
+            }
+            break;
+        default:
+            {
+                throw new Error('Unknown status, the component has received unexpected props');
+            }
     }
 }
