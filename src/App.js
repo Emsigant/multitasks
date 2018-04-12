@@ -13,6 +13,7 @@ import './business-manage-src/style.less';
 // components or miscellaneous imports
 import reducers from './business-manage-src/reducers';
 import CertificationManage from './business-manage-src/CertificationManage';
+import AccountManage from './business-manage-src/AccountManage';
 
 // let or const definitions
 let store = createStore(reducers, applyMiddleware(thunk));
@@ -26,7 +27,7 @@ class App extends Component {
         { text: '认证信息', to: '/', path: '/', component: CertificationManage },
         { text: '商品管理', to: '/product', path: '/product', component: () => (<div>product</div>) },
         { text: '订单管理', to: '/order', path: '/order', component: () => (<div>order</div>) },
-        { text: '账户管理', to: '/account', path: '/account', component: () => (<div>account</div>) },
+        { text: '账户管理', to: '/account', path: '/account', component: AccountManage },
       ],
       sideBarHeaderTitle: '后台管理系统'
     }

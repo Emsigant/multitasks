@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { List, Button, Modal, Input, Icon, Upload, message } from 'antd';
 
 import { CerFetchData, CerSubmit } from "./actions";
-
+import WrappedInput from "./components/WrappedInput";
 import image from '../c.jpg';
 
 const ListItem = List.Item;
@@ -19,30 +19,6 @@ const UploadOptions = {
 	action: '/common/upload',
 	withCredentials: true
 };
-
-class WrappedInput extends Component {
-	render() {
-		let { prefixType, holder, change, inputValue, target, touched } = this.props;
-		let msg = `请输入${holder}`;
-		return (
-			<div className='wrapped-input'>
-				<Input
-					prefix={<Icon type={prefixType} />}
-					placeholder={holder}
-					data-target={target}
-					onChange={change}
-					value={inputValue}
-					style={{ width: '270px' }}
-				/>
-				{
-					inputValue === '' && touched ?
-						<span className="warning-span">{msg}</span> :
-						null
-				}
-			</div>
-		)
-	}
-}
 
 class SubmitForm extends Component {
 	constructor(p) {
@@ -64,31 +40,27 @@ class SubmitForm extends Component {
 		let target = e.target.dataset.target;
 		let value = e.target.value;
 		switch (target) {
-			case 'userName':
-				{
-					this.setState({
-						userName: value,
-						userNameTouched: true
-					})
-				} break;
-			case 'bankCardNo':
-				{
-					this.setState({
-						bankCardNo: value,
-						bankCardNoTouched: true
-					})
-				} break;
-			case 'bankName':
-				{
-					this.setState({
-						bankName: value,
-						bankNameTouched: true
-					})
-				} break;
-			default:
-				{
-					throw new Error('Unknown onchange event');
-				} break;
+			case 'userName': {
+				this.setState({
+					userName: value,
+					userNameTouched: true
+				})
+			} break;
+			case 'bankCardNo': {
+				this.setState({
+					bankCardNo: value,
+					bankCardNoTouched: true
+				})
+			} break;
+			case 'bankName': {
+				this.setState({
+					bankName: value,
+					bankNameTouched: true
+				})
+			} break;
+			default: {
+				throw new Error('Unknown onchange event');
+			}
 		}
 	}
 	validate() {
@@ -146,17 +118,21 @@ class SubmitForm extends Component {
 						>
 							<Button disabled={!canUpload}><Icon type="upload" />上传审核文件</Button>
 						</Upload>
-						<Button onClick={() => {this.setState({showPreview: true})}} disabled={authImageUrl === ''}>
+						<Button
+							onClick={() => { this.setState({ showPreview: true }) }}
+							disabled={authImageUrl === ''}
+							style={{ marginLeft: '1rem' }}
+						>
 							预览审核文件
 						</Button>
 						<Modal
 							visible={showPreview}
 							footer={null}
-							onCancel={() => {this.setState({showPreview:false})}}
+							onCancel={() => { this.setState({ showPreview: false }) }}
 							width={800}
-							style={{top:24}}
+							style={{ top: 24 }}
 						>
-							<img src={authImageUrl} alt="预览审核文件" style={{width:'100%'}}/>
+							<img src={authImageUrl} alt="预览审核文件" style={{ width: '100%' }} />
 						</Modal>
 						{
 							authImageUrl === '' && imageTouched && !canUpload ?
@@ -190,7 +166,7 @@ class SubmitForm extends Component {
 								bankCardNo,
 								authImageUrl,
 								bankName
-							}))
+							}));
 						}}
 					>提交审核资料</Button>
 				</div>

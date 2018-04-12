@@ -43,7 +43,7 @@ function Certification(state, action) {
                     }
                 } else if (status === 'resolved') {
                     message.success(SUCC_INFOS.FETCH, 1);
-                    
+
                 } else if (status === 'pending') {
 
                 }
@@ -72,7 +72,7 @@ function Certification(state, action) {
                     }
                 } else if (status === 'resolved') {
                     message.success(SUCC_INFOS.SUBMIT, 1);
-                    
+
                 } else if (status === 'pending') {
 
                 }
@@ -93,6 +93,37 @@ function Certification(state, action) {
     }
 }
 
+function Account(state, action) {
+    switch (action.type) {
+        case ACTIONS_CONSTS.ACCOUNT.ACCOUNT_SUBMIT_STATUS_CHANGE:
+            {
+                let status = action.status;
+                if (status === 'rejected') {
+                    message.error(FAIL_INFOS.UPDATE, 1);
+                    return {
+                        submitStatus: status
+                    }
+                } else if (status === 'resolved') {
+                    message.success(SUCC_INFOS.UPDATE, 1);
+                } else if (status === 'pending') {
+
+                } else if(status === 'invalid') {
+                    message.error('旧密码不正确，请重试');
+                }
+                return {
+                    submitStatus: action.status
+                }
+            }
+        default:
+            {
+                return {
+                    submitStatus: 'no-status'
+                }
+            }
+    }
+}
+
 export default combineReducers({
-    Certification
+    Certification,
+    Account
 });

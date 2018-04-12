@@ -1,5 +1,5 @@
 // mode: dev or prod
-const ENV = 'prod';
+const ENV = 'dev';
 
 // common fetch options
 const COMMON_FETCH_OPTIONS = {
@@ -24,6 +24,9 @@ export const ACTIONS_CONSTS = {
         CER_SUBMIT: 'CER_SUBMIT',
         CER_SUBMIT_STATUS_CHANGE: 'CER_SUBMIT_STATUS_CHANGE',
         CER_CLEAR: 'CER_CLEAR'
+    },
+    ACCOUNT: {
+        ACCOUNT_SUBMIT_STATUS_CHANGE: 'ACCOUNT_SUBMIT_STATUS_CHANGE'
     }
 }
 export function CerData(data) {
@@ -43,7 +46,7 @@ export function CerClear() {
         type: ACTIONS_CONSTS.CER.CER_CLEAR
     }
 }
-export function CerFetchData() {
+export function CerFetchData(fakeData) {
     return (dispatch, getState) => {
         dispatch(CerDataStatus('pending'));
         dispatch(CerClear());
@@ -52,12 +55,7 @@ export function CerFetchData() {
                 let random = Math.random();
                 if (random > 0) {
                     dispatch(CerData({
-                        // userId: '000001',
-                        // userName: 'a business',
-                        // bankCardNo:'10342948292',
-                        // bankName:'bankaccountname',
-                        // authImageUrl: 'some value',
-                        // status: '2'
+                        ...fakeData
                     }));
                     dispatch(CerDataStatus('resolved'));
                 } else {
@@ -65,7 +63,7 @@ export function CerFetchData() {
                     dispatch(CerDataStatus('rejected'));
                 }
             }, 500);
-        } else {
+        } else if (ENV === 'prod') {
             fetch(APIS.BUSINESS_AUTH_QUERY, {
                     method: 'post',
                     ...COMMON_FETCH_OPTIONS
@@ -73,10 +71,10 @@ export function CerFetchData() {
                 .then(resp => resp.json())
                 .then(resp => {
                     // success
-                    if(resp.code === '1') {
+                    if (resp.code === '1') {
                         let data = resp.content;
                         dispatch(CerData(data));
-                        dispatch(CerDataStatus('resolved'))
+                        dispatch(CerDataStatus('resolved'));
                     } else {
                         dispatch(CerDataStatus('rejected'))
                     }
@@ -98,25 +96,55 @@ export function CerSubmit(data) {
         dispatch(CerSubmitStatusChange('pending'));
         if (ENV === 'dev') {
             setTimeout(() => {
-                dispatch(CerSubmitStatusChange('rejected'));
+                dispatch(CerSubmitStatusChange('resolved'));
+                dispatch(CerFetchData({
+                    userId: '000001',
+                    userName: 'a business',
+                    bankCardNo: '10342948292',
+                    bankName: 'bankaccountname',
+                    authImageUrl: 'some value',
+                    status: '0'
+                }));
             }, 500);
-        } else {
+        } else if (ENV === 'prod') {
             fetch(APIS.BUSINESS_AUTH_SUBMIT, {
-                method: 'post',
-                body: JSON.stringify(data),
-                ...COMMON_FETCH_OPTIONS
-            })
-            .then(resp => resp.json())
-            .then(resp => {
-                if(resp.code === '1') {
-                    dispatch(CerSubmitStatusChange('resolved'));
-                } else {
+                    method: 'post',
+                    body: JSON.stringify(data),
+                    ...COMMON_FETCH_OPTIONS
+                })
+                .then(resp => resp.json())
+                .then(resp => {
+                    if (resp.code === '1') {
+                        dispatch(CerSubmitStatusChange('resolved'));
+                        dispatch(CerFetchData());
+                    } else {
+                        dispatch(CerSubmitStatusChange('rejected'));
+                    }
+                })
+                .catch(err => {
                     dispatch(CerSubmitStatusChange('rejected'));
-                }
-            })
-            .catch(err => {
-                dispatch(CerSubmitStatusChange('rejected'));
-            });
+                });
+        }
+    }
+}
+
+// account manage actions
+// account submit status: pending, resolved, rejected, invalid
+export function AccountSubmitStatusChange(status) {
+    return {
+        type:ACTIONS_CONSTS.ACCOUNT.ACCOUNT_SUBMIT_STATUS_CHANGE,
+        status
+    }
+}
+export function AccountSubmit(data) {
+    return (dispatch, getState) => {
+        dispatch(AccountSubmitStatusChange('pending'));
+        if (ENV === 'dev') {
+            setTimeout(() => {
+                dispatch(AccountSubmitStatusChange('invalid'));
+            }, 500);
+        } else if (ENV === 'prod') {
+
         }
     }
 }
