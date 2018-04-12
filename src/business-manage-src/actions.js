@@ -141,7 +141,7 @@ export function AccountSubmit(data) {
         dispatch(AccountSubmitStatusChange('pending'));
         if (ENV === 'dev') {
             setTimeout(() => {
-                dispatch(AccountSubmitStatusChange('invalid'));
+                dispatch(AccountSubmitStatusChange('resolved'));
             }, 500);
         } else if (ENV === 'prod') {
 

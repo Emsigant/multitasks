@@ -5,6 +5,7 @@ import { Modal, Button, Input } from "antd";
 import { AccountSubmit } from "./actions";
 
 import WrappedInput from './components/WrappedInput';
+import { CommonMessage } from "./util";
 
 class AccountManage extends Component {
     constructor(props) {
@@ -42,6 +43,8 @@ class AccountManage extends Component {
         return oldP && oldPT && newP && newPT && oldP !== newP;
     }
     componentWillReceiveProps(newProps) {
+        let currentStatus = newProps.submitStatus;
+        CommonMessage(currentStatus, 'UPDATE');
         if (newProps.submitStatus === 'resolved') {
             this.setState({
                 oldP: '',

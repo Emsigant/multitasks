@@ -87,7 +87,7 @@ function Certification(state, action) {
                     status: 'pending',
                     msg: '',
                     data: null,
-                    submitStatus: 'no-status'
+                    submitStatus: 'init'
                 }
             }
     }
@@ -98,18 +98,6 @@ function Account(state, action) {
         case ACTIONS_CONSTS.ACCOUNT.ACCOUNT_SUBMIT_STATUS_CHANGE:
             {
                 let status = action.status;
-                if (status === 'rejected') {
-                    message.error(FAIL_INFOS.UPDATE, 1);
-                    return {
-                        submitStatus: status
-                    }
-                } else if (status === 'resolved') {
-                    message.success(SUCC_INFOS.UPDATE, 1);
-                } else if (status === 'pending') {
-
-                } else if(status === 'invalid') {
-                    message.error('旧密码不正确，请重试');
-                }
                 return {
                     submitStatus: action.status
                 }
@@ -117,7 +105,7 @@ function Account(state, action) {
         default:
             {
                 return {
-                    submitStatus: 'no-status'
+                    submitStatus: 'init'
                 }
             }
     }
