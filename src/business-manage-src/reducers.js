@@ -84,7 +84,7 @@ function Certification(state, action) {
         default:
             {
                 return {
-                    status: 'pending',
+                    status: 'init',
                     msg: '',
                     data: null,
                     submitStatus: 'init'

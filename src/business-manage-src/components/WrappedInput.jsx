@@ -15,6 +15,7 @@ class WrappedInput extends Component {
 	render() {
 		let { prefixType, holder, change, inputValue, target, touched, type='text' } = this.props;
 		let msg = `请输入${holder}`;
+		let showWarning = inputValue === '' && touched;
 		return (
 			<div className='wrapped-input'>
 				<Input
@@ -27,7 +28,7 @@ class WrappedInput extends Component {
                     type={type}
 				/>
 				{
-					inputValue === '' && touched ?
+					showWarning ?
 						<span className="warning-span">{msg}</span> :
 						null
 				}

@@ -1,19 +1,11 @@
+import {
+    STATUS_CODE,
+    APIS,
+    COMMON_FETCH_OPTIONS
+} from "./CONSTS";
+
 // mode: dev or prod
-const ENV = 'dev';
-
-// common fetch options
-const COMMON_FETCH_OPTIONS = {
-    credentials: 'include',
-    headers: {
-        'Content-Type': 'application/json'
-    }
-};
-
-// apis
-const APIS = {
-    BUSINESS_AUTH_QUERY: '/business/auth/query',
-    BUSINESS_AUTH_SUBMIT: '/business/auth'
-};
+const ENV = 'prod';
 
 // business auth actions
 export const ACTIONS_CONSTS = {
@@ -132,7 +124,7 @@ export function CerSubmit(data) {
 // account submit status: pending, resolved, rejected, invalid
 export function AccountSubmitStatusChange(status) {
     return {
-        type:ACTIONS_CONSTS.ACCOUNT.ACCOUNT_SUBMIT_STATUS_CHANGE,
+        type: ACTIONS_CONSTS.ACCOUNT.ACCOUNT_SUBMIT_STATUS_CHANGE,
         status
     }
 }
@@ -144,7 +136,44 @@ export function AccountSubmit(data) {
                 dispatch(AccountSubmitStatusChange('resolved'));
             }, 500);
         } else if (ENV === 'prod') {
-
+            fetch(APIS.MODIFY_PASSWORD, {
+                    method: 'post',
+                    body: JSON.stringify(data),
+                    ...COMMON_FETCH_OPTIONS
+                })
+                .then(resp => resp.json())
+                .then(resp => {
+                    let code = resp.code;
+                    switch (code) {
+                        case '1':
+                            {
+                                dispatch(AccountSubmitStatusChange('resolved'));
+                            }
+                            break;
+                        case '3':
+                            {
+                                dispatch(AccountSubmitStatusChange('not-login'));
+                            }
+                            break;
+                        case '8':
+                            {
+                                dispatch(AccountSubmitStatusChange('not-exist'));
+                            }
+                            break;
+                        case '9':
+                            {
+                                dispatch(AccountSubmitStatusChange('invalid'));
+                            }
+                            break;
+                        default:
+                            {
+                                throw new Error('Unknown status code');
+                            }
+                    }
+                })
+                .catch(err => {
+                    dispatch(AccountSubmitStatusChange('rejected'))
+                })
         }
     }
 }

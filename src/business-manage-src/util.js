@@ -47,6 +47,16 @@ export function CommonMessage(currentStatus, actionType) {
 
             }
             break;
+        case 'not-login':
+            {
+                message.error('未登录，请先登录', 1);
+            }
+            break;
+        case 'not-exist':
+            {
+                message.error('用户不存在，请重试', 1);
+            }
+            break;
         default:
             {
                 throw new Error('Unknown status, the component has received unexpected props');
