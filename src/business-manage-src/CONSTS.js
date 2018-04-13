@@ -17,7 +17,7 @@ export const APIS = {
 };
 
 // fetch的通用配置 fetch(url, { ...otherOptions, ...COMMON_FETCH_OPTIONS })
-const COMMON_FETCH_OPTIONS = {
+export const COMMON_FETCH_OPTIONS = {
     credentials: 'include',
     headers: {
         'Content-Type': 'application/json'

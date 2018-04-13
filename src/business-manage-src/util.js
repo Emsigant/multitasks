@@ -2,6 +2,10 @@ import {
     message
 } from "antd";
 
+import {
+    STATUS_CODE
+} from "./CONSTS";
+
 const FAIL_INFOS = {
     FETCH: '获取失败，请重试',
     SUBMIT: '提交失败，请重试',
@@ -22,44 +26,44 @@ const SUCC_INFOS = {
  */
 export function CommonMessage(currentStatus, actionType) {
     switch (currentStatus) {
-        case 'rejected':
+        case STATUS_CODE.REJECTED:
             {
                 message.error(FAIL_INFOS[actionType], 1);
             }
             break;
-        case 'resolved':
+        case STATUS_CODE.RESOLVED:
             {
                 message.success(SUCC_INFOS[actionType], 1);
             }
             break;
-        case 'invalid':
+        case STATUS_CODE.PSW_WRONG:
             {
                 message.error('旧密码不正确，请重试', 1);
             }
             break;
-        case 'init':
+        case STATUS_CODE.INIT:
             {
 
             }
             break;
-        case 'pending':
+        case STATUS_CODE.PENDING:
             {
 
             }
             break;
-        case 'not-login':
+        case STATUS_CODE.NOT_LOGIN:
             {
                 message.error('未登录，请先登录', 1);
             }
             break;
-        case 'not-exist':
+        case STATUS_CODE.NOT_EXIST:
             {
                 message.error('用户不存在，请重试', 1);
             }
             break;
         default:
             {
-                throw new Error('Unknown status, the component has received unexpected props');
+                throw new Error('Unknown status');
             }
     }
 }

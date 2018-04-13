@@ -4,6 +4,16 @@ import {
     COMMON_FETCH_OPTIONS
 } from "./CONSTS";
 
+let {
+    REJECTED,
+    RESOLVED,
+    PSW_WRONG,
+    NOT_EXIST,
+    NOT_LOGIN,
+    PENDING,
+    INIT
+} = STATUS_CODE;
+
 // mode: dev or prod
 const ENV = 'prod';
 
@@ -49,10 +59,10 @@ export function CerFetchData(fakeData) {
                     dispatch(CerData({
                         ...fakeData
                     }));
-                    dispatch(CerDataStatus('resolved'));
+                    dispatch(CerDataStatus(RESOLVED));
                 } else {
                     dispatch(CerData('this is a fail message, random=' + random));
-                    dispatch(CerDataStatus('rejected'));
+                    dispatch(CerDataStatus(REJECTED));
                 }
             }, 500);
         } else if (ENV === 'prod') {
@@ -66,13 +76,13 @@ export function CerFetchData(fakeData) {
                     if (resp.code === '1') {
                         let data = resp.content;
                         dispatch(CerData(data));
-                        dispatch(CerDataStatus('resolved'));
+                        dispatch(CerDataStatus(RESOLVED));
                     } else {
-                        dispatch(CerDataStatus('rejected'))
+                        dispatch(CerDataStatus(REJECTED))
                     }
                 })
                 .catch(err => {
-                    dispatch(CerDataStatus('rejected'))
+                    dispatch(CerDataStatus(REJECTED))
                 });
         }
     }
@@ -85,10 +95,10 @@ export function CerSubmitStatusChange(status) {
 }
 export function CerSubmit(data) {
     return (dispatch, getState) => {
-        dispatch(CerSubmitStatusChange('pending'));
+        dispatch(CerSubmitStatusChange(PENDING));
         if (ENV === 'dev') {
             setTimeout(() => {
-                dispatch(CerSubmitStatusChange('resolved'));
+                dispatch(CerSubmitStatusChange(RESOLVED));
                 dispatch(CerFetchData({
                     userId: '000001',
                     userName: 'a business',
@@ -107,14 +117,14 @@ export function CerSubmit(data) {
                 .then(resp => resp.json())
                 .then(resp => {
                     if (resp.code === '1') {
-                        dispatch(CerSubmitStatusChange('resolved'));
+                        dispatch(CerSubmitStatusChange(RESOLVED));
                         dispatch(CerFetchData());
                     } else {
-                        dispatch(CerSubmitStatusChange('rejected'));
+                        dispatch(CerSubmitStatusChange(REJECTED));
                     }
                 })
                 .catch(err => {
-                    dispatch(CerSubmitStatusChange('rejected'));
+                    dispatch(CerSubmitStatusChange(REJECTED));
                 });
         }
     }
@@ -130,10 +140,10 @@ export function AccountSubmitStatusChange(status) {
 }
 export function AccountSubmit(data) {
     return (dispatch, getState) => {
-        dispatch(AccountSubmitStatusChange('pending'));
+        dispatch(AccountSubmitStatusChange(PENDING));
         if (ENV === 'dev') {
             setTimeout(() => {
-                dispatch(AccountSubmitStatusChange('resolved'));
+                dispatch(AccountSubmitStatusChange(RESOLVED));
             }, 500);
         } else if (ENV === 'prod') {
             fetch(APIS.MODIFY_PASSWORD, {
@@ -147,32 +157,32 @@ export function AccountSubmit(data) {
                     switch (code) {
                         case '1':
                             {
-                                dispatch(AccountSubmitStatusChange('resolved'));
+                                dispatch(AccountSubmitStatusChange(RESOLVED));
                             }
                             break;
                         case '3':
                             {
-                                dispatch(AccountSubmitStatusChange('not-login'));
+                                dispatch(AccountSubmitStatusChange(NOT_LOGIN));
                             }
                             break;
-                        case '8':
+                        case '10000':
                             {
-                                dispatch(AccountSubmitStatusChange('not-exist'));
+                                dispatch(AccountSubmitStatusChange(NOT_EXIST));
                             }
                             break;
-                        case '9':
+                        case '10001':
                             {
-                                dispatch(AccountSubmitStatusChange('invalid'));
+                                dispatch(AccountSubmitStatusChange(PSW_WRONG));
                             }
                             break;
                         default:
                             {
-                                throw new Error('Unknown status code');
+                                dispatch(AccountSubmitStatusChange(REJECTED));
                             }
                     }
                 })
                 .catch(err => {
-                    dispatch(AccountSubmitStatusChange('rejected'))
+                    dispatch(AccountSubmitStatusChange(REJECTED))
                 })
         }
     }
