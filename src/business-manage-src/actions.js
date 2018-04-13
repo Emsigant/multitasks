@@ -15,7 +15,7 @@ let {
 } = STATUS_CODE;
 
 // mode: dev or prod
-const ENV = 'prod';
+const ENV = 'dev';
 
 // business auth actions
 export const ACTIONS_CONSTS = {

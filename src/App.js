@@ -5,6 +5,7 @@ import { HashRouter, NavLink, Route, Switch } from 'react-router-dom';
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+import { Button, Icon, message } from "antd";
 
 // css, less or images imports
 import './index.css';
@@ -14,6 +15,8 @@ import './business-manage-src/style.less';
 import reducers from './business-manage-src/reducers';
 import CertificationManage from './business-manage-src/CertificationManage';
 import AccountManage from './business-manage-src/AccountManage';
+import OrderManage from "./business-manage-src/OrderManage";
+import ProductManage from './business-manage-src/ProductManage';
 
 // let or const definitions
 let store = createStore(reducers, applyMiddleware(thunk));
@@ -25,8 +28,8 @@ class App extends Component {
     this.state = {
       routeRenderList: [
         { text: '认证信息', to: '/', path: '/', component: CertificationManage },
-        { text: '商品管理', to: '/product', path: '/product', component: () => (<div>product</div>) },
-        { text: '订单管理', to: '/order', path: '/order', component: () => (<div>order</div>) },
+        { text: '商品管理', to: '/product', path: '/product', component: ProductManage },
+        { text: '订单管理', to: '/order', path: '/order', component: OrderManage },
         { text: '账户管理', to: '/account', path: '/account', component: AccountManage },
       ],
       sideBarHeaderTitle: '后台管理系统'
@@ -56,19 +59,45 @@ class App extends Component {
                   ))
                 }
               </ul>
+              <Button
+                className='log-out-button'
+                type='primary'
+                onClick={() => {
+                  fetch('/logout', {
+                    credentials: 'include',
+                    method: 'post'
+                  })
+                    .then(resp => resp.json())
+                    .then(resp => {
+                      let code = resp.code;
+                      switch (code) {
+                        case '1': {
+                          message.success('退出登录成功', 1);
+                          window.location.href = '/';
+                        } break;
+                        default: {
+                          message.error('退出登录失败，请重试', 1);
+                        }
+                      }
+                    })
+                }}
+              >
+                <Icon type='logout' />
+                退出登录
+              </Button>
             </div>
             <div className="content">
               <Switch>
-              {
-                routeRenderList.map((item, index) => (
-                  <Route
-                    key={`route-${index}`}
-                    path={item.path}
-                    exact={item.path === '/'}
-                    component={item.component}
-                  />
-                ))
-              }
+                {
+                  routeRenderList.map((item, index) => (
+                    <Route
+                      key={`route-${index}`}
+                      path={item.path}
+                      exact={item.path === '/'}
+                      component={item.component}
+                    />
+                  ))
+                }
               </Switch>
             </div>
           </div>
