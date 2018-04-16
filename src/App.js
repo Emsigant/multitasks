@@ -1,3 +1,5 @@
+import './index.css';
+import './business-manage-src/style.less';
 // react imports
 import React, { Component } from 'react';
 // other modules imports
@@ -6,10 +8,6 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { Button, Icon, message } from "antd";
-
-// css, less or images imports
-import './index.css';
-import './business-manage-src/style.less';
 
 // components or miscellaneous imports
 import reducers from './business-manage-src/reducers';

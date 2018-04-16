@@ -7,6 +7,16 @@ import {
 import {
     message
 } from "antd";
+import {
+    STATUS_CODE
+} from "./CONSTS";
+
+let {
+    PENDING,
+    INIT,
+    REJECTED,
+    RESOLVED
+} = STATUS_CODE;
 
 // infos
 const FAIL_INFOS = {
@@ -111,7 +121,25 @@ function Account(state, action) {
     }
 }
 
+
+function Order(state, action) {
+    switch (action.type) {
+        default: {
+            return {
+                orderData: [],
+                orderDataStatus: INIT,
+                encashRecordData: [],
+                encashRecordDataStatus: INIT,
+                encashSummary: null,
+                encashSummaryStatus: INIT,
+                encashSubmitStatus: INIT
+            }
+        }
+    }
+}
+
 export default combineReducers({
     Certification,
-    Account
+    Account,
+    Order
 });

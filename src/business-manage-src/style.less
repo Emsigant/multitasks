@@ -11,8 +11,14 @@
 @side-bar-width: 300px;
 @main-font-color: #262626;
 @route-view-padding: 1rem;
+@fixed-header-height: 3rem;
+@border-bottom-width: 2px;
 body {
     color: @main-font-color;
+}
+
+a {
+    text-decoration: none;
 }
 
 .app-container {
@@ -61,6 +67,33 @@ body {
 .route-view {
     padding: @route-view-padding;
     box-sizing: border-box;
+    .fixed-header {
+        position: fixed;
+        top: 0;
+        height: @fixed-header-height;
+        left: @side-bar-width;
+        right: 0;
+        line-height: @fixed-header-height;
+        padding: 0 1rem;
+        box-shadow: 0 0 30px rgba(0, 0, 0, .15);
+        display: flex;
+        a.fixed-header-item {
+            display: inline-block;
+            text-decoration: none;
+            box-sizing: border-box;
+            padding: 0 1rem;
+            height: 100%;
+            border-bottom: @border-bottom-width solid transparent;
+            color: #333;
+        }
+        a.fixed-header-item-active {
+            border-bottom: @border-bottom-width solid @theme-color-6;
+            color: @theme-color-6;
+        }
+    }
+    .fixed-header~div {
+        margin-top: @fixed-header-height;
+    }
 }
 
 .plain-list-item {
@@ -84,6 +117,7 @@ body {
         width: 100%;
     }
 }
+
 .plain-div {
     margin-top: 1rem;
     width: 450px;
@@ -92,9 +126,11 @@ body {
         flex-direction: column;
     }
 }
+
 .wrapped-input {
     margin-bottom: 1rem;
 }
+
 .warning-span {
     margin-left: .5rem;
     color: red;

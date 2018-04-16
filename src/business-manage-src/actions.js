@@ -29,6 +29,10 @@ export const ACTIONS_CONSTS = {
     },
     ACCOUNT: {
         ACCOUNT_SUBMIT_STATUS_CHANGE: 'ACCOUNT_SUBMIT_STATUS_CHANGE'
+    },
+    ORDER: {
+        ORDER_DATA: 'ORDER_DATA',
+        ORDER_DATA_STATUS_CHANGE: 'ORDER_DATA_STATUS_CHANGE'
     }
 }
 export function CerData(data) {
@@ -184,6 +188,36 @@ export function AccountSubmit(data) {
                 .catch(err => {
                     dispatch(AccountSubmitStatusChange(REJECTED))
                 })
+        }
+    }
+}
+
+// order module
+function OrderData(data) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.ORDER_DATA,
+        data
+    }
+}
+
+function OrderDataStatusChange(status) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.ORDER_DATA_STATUS_CHANGE,
+        status
+    }
+}
+export function FetchOrderData() {
+    return (dispatch, getState) => {
+        dispatch(OrderDataStatusChange(PENDING));
+        if (ENV === 'dev') {
+            setTimeout(() => {
+                dispatch(OrderDataStatusChange(RESOLVED));
+                dispatch(OrderData(
+                    [1,2,3,4,5]
+                ));
+            }, 500);
+        } else if (ENV === 'prod') {
+
         }
     }
 }
