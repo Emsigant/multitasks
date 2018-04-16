@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Table } from "antd";
 
 import { FetchOrderData, OrderDataClear, FetchEncashRecordData, OrderPageChange } from "./actions";
-
+import { mapTitleToKey } from "./CONSTS";
 function C(text) {
     return () => (
         <div>{text}</div>
@@ -61,38 +61,11 @@ let ConnectedOrderData = ComponentGenerator({
         }
     },
     uniqueKeyPrefix: 'order-data-',
-    tableColumns: [
-        {
-            title: '地址',
-            dataIndex: 'address',
-            key: 'address',
-        },
-        {
-            title: '总金额',
-            dataIndex: 'orderTotalAmount',
-            key: 'orderTotalAmount',
-        },
-        {
-            title: '演出名称',
-            dataIndex: 'showName',
-            key: 'showName',
-        },
-        {
-            title: '演出开始时间',
-            dataIndex: 'startTime',
-            key: 'startTime',
-        },
-        {
-            title: '状态',
-            dataIndex: 'status',
-            key: 'status',
-        },
-        {
-            title: '类型名称',
-            dataIndex: 'typeName',
-            key: 'typeName',
-        },
-    ],
+    tableColumns: ['地址', '总金额', '演出名称', '演出开始时间', '状态', '类型名称'].map(item => ({
+        title: item,
+        dataIndex: mapTitleToKey[item],
+        key: mapTitleToKey[item],
+    })),
     pageFn: OrderPageChange('order-data')
 })();
 

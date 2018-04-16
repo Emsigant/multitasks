@@ -25,27 +25,27 @@ export const COMMON_FETCH_OPTIONS = {
     }
 };
 
+// actions consts
 export const ACTIONS_CONSTS = {
-    // 商家认证
     CER: {
-        CER_DATA: 'CER_DATA',
-        CER_DATA_STATUS_CHANGE: 'CET_DATA_STATUS_CHANGE',
-        CER_SUBMIT: 'CER_SUBMIT',
-        CER_SUBMIT_STATUS_CHANGE: 'CER_SUBMIT_STATUS_CHANGE',
-        CER_CLEAR: 'CER_CLEAR'
+        CER_DATA: '1',
+        CER_DATA_STATUS_CHANGE: '2',
+        CER_SUBMIT: '3',
+        CER_SUBMIT_STATUS_CHANGE: '4',
+        CER_CLEAR: '5'
     },
     ACCOUNT: {
-        ACCOUNT_SUBMIT_STATUS_CHANGE: 'ACCOUNT_SUBMIT_STATUS_CHANGE'
+        ACCOUNT_SUBMIT_STATUS_CHANGE: '6'
     },
     ORDER: {
-        ORDER_DATA: 'ORDER_DATA',
-        ORDER_DATA_TOTAL: 'ORDER_TOTAL',
-        ORDER_DATA_STATUS_CHANGE: 'ORDER_DATA_STATUS_CHANGE',
-        ORDER_DATA_PAGE_CHANGE: 'ORDER_DATA_PAGE_CHANGE',
-        ORDER_DATA_CLEAR: 'ORDER_DATA_CLEAR',
-        ENCASH_DATA: 'ENCASH_DATA',
-        ENCASH_DATA_STATUS: 'ENCASH_DATA_STATUS',
-        ENCASH_DATA_PAGE_CHANGE: 'ENCASH_DATA_PAGE_CHANGE'
+        ORDER_DATA: '7',
+        ORDER_DATA_TOTAL: '8',
+        ORDER_DATA_STATUS_CHANGE: '9',
+        ORDER_DATA_PAGE_CHANGE: '10',
+        ORDER_DATA_CLEAR: '11',
+        ENCASH_DATA: '12',
+        ENCASH_DATA_STATUS: '13',
+        ENCASH_DATA_PAGE_CHANGE: '14'
     }
 }
 
@@ -61,4 +61,13 @@ export const SUCC_INFOS = {
     SUBMIT: '提交成功',
     UPDATE: '更新成功',
     DELETE: '删除成功'
+};
+
+export const mapTitleToKey = {
+    '地址': 'address',
+    '总金额': 'orderTotalAmount',
+    '演出名称': 'showName',
+    '演出开始时间': 'startTime',
+    '状态': 'status',
+    '类型名称': 'typeName'
 };

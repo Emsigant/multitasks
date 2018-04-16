@@ -16,7 +16,7 @@ let {
 } = STATUS_CODE;
 
 // mode: dev or prod
-const ENV = 'prod';
+const ENV = 'dev';
 
 // certification module
 export function CerData(data) {
@@ -280,6 +280,7 @@ export function OrderDataClear() {
         type: ACTIONS_CONSTS.ORDER.ORDER_DATA_CLEAR
     }
 }
+// vendor page change function for encash-record and order-data
 export function OrderPageChange(type) {
     switch (type) {
         case 'order-data':

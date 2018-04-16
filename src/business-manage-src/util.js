@@ -3,21 +3,10 @@ import {
 } from "antd";
 
 import {
-    STATUS_CODE
+    STATUS_CODE,
+    FAIL_INFOS,
+    SUCC_INFOS
 } from "./CONSTS";
-
-const FAIL_INFOS = {
-    FETCH: '获取失败，请重试',
-    SUBMIT: '提交失败，请重试',
-    UPDATE: '更新失败，请重试',
-    DELETE: '删除失败，请重试'
-};
-const SUCC_INFOS = {
-    FETCH: '成功获取数据',
-    SUBMIT: '成功提交数据',
-    UPDATE: '成功更新数据',
-    DELETE: '成功删除数据'
-};
 
 /**
  * 
@@ -67,4 +56,9 @@ export function CommonMessage(currentStatus, actionType) {
                 throw new Error('Unknown status');
             }
     }
+}
+
+export function FormatTime(timeStamp) {
+    timeStamp = +timeStamp;
+    let date = new Date(timeStamp);
 }
