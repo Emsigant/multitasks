@@ -3,7 +3,7 @@ import { NavLink, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { Table } from "antd";
 
-import { FetchOrderData } from "./actions";
+import { FetchOrderData, OrderDataClear, FetchEncashRecordData, OrderPageChange } from "./actions";
 
 function C(text) {
     return () => (
@@ -11,43 +11,112 @@ function C(text) {
     )
 }
 
-class OrderSummary extends Component {
-    componentDidMount() {
-        this.props.dispatch(FetchOrderData());
-    }
-    render() {
-        let { data } = this.props;
-        return (
-            <div>
-                {   
-                    data.lenght ?
-                    data.map(item => (
-                        <div key={`asfjkfj-${item}`}>{item}</div>
-                    )):
-                    'pending'
-                }
-            </div>
-        )
+function ComponentGenerator({ fetchFn, clearFn, mstp, uniqueKeyPrefix, tableColumns, tablePagination, pageFn }) {
+    return () => {
+        class SubComponent extends Component {
+            componentDidMount() {
+                this.props.dispatch(fetchFn());
+            }
+            componentWillUnmount() {
+                this.props.dispatch(clearFn());
+            }
+            render() {
+                let { data, dataStatus, total, currentPage, dispatch } = this.props;
+                return (
+                    <div>
+                        <Table
+                            bordered
+                            dataSource={data}
+                            pagination={{
+                                current: currentPage,
+                                total: total,
+                                onChange: (targetPage, pageSize) => {
+                                    dispatch(pageFn(targetPage - currentPage));
+                                    dispatch(clearFn());
+                                    dispatch(fetchFn(targetPage));
+                                },
+                                showQuickJumper: true,
+                                hideOnSinglePage: true
+                            }}
+                            loading={dataStatus === 'pending'}
+                            columns={tableColumns}
+                        />
+                    </div>
+                )
+            }
+        }
+        return connect(mstp)(SubComponent);
     }
 }
 
-let mstp = state => {
-    return {
-        data: state.Order.orderData
-    }
-}
+let ConnectedOrderData = ComponentGenerator({
+    fetchFn: FetchOrderData,
+    clearFn: OrderDataClear,
+    mstp: state => {
+        return {
+            data: state.Order.orderData,
+            dataStatus: state.Order.orderDataStatus,
+            currentPage: state.Order.orderDataCurrentPage,
+            total: state.Order.orderDataTotal
+        }
+    },
+    uniqueKeyPrefix: 'order-data-',
+    tableColumns: [
+        {
+            title: '地址',
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: '总金额',
+            dataIndex: 'orderTotalAmount',
+            key: 'orderTotalAmount',
+        },
+        {
+            title: '演出名称',
+            dataIndex: 'showName',
+            key: 'showName',
+        },
+        {
+            title: '演出开始时间',
+            dataIndex: 'startTime',
+            key: 'startTime',
+        },
+        {
+            title: '状态',
+            dataIndex: 'status',
+            key: 'status',
+        },
+        {
+            title: '类型名称',
+            dataIndex: 'typeName',
+            key: 'typeName',
+        },
+    ],
+    pageFn: OrderPageChange('order-data')
+})();
 
-let ConnectedOrderSummary = connect(mstp)(OrderSummary);
+// let ConnectedEncashRecord = ComponentGenerator(
+//     FetchEncashRecordData,
+//     OrderDataClear,
+//     state => {
+//         return {
+//             data: state.Order.encashRecordData,
+//             dataStatus: state.Order.encashRecordDataStatus
+//         }
+//     },
+//     'encash-record-'
+// )();
 
 class OrderManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             subPages: [
-                { text: '订单统计', to: '/', path: '/', component: () => (<ConnectedOrderSummary/>) },
+                { text: '订单统计', to: '/', path: '/', component: ConnectedOrderData },
                 { text: '收入统计', to: '/income', path: '/income', component: C('收入统计') },
                 { text: '发起提现', to: '/encash', path: '/encash', component: C('发起提现') },
-                { text: '提现记录', to: '/encash-record', path: '/encash-record', component: C('提现记录') }
+                { text: '提现记录', to: '/encash-record', path: '/encash-record', component: C('zzz') }
             ]
         }
     }

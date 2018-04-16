@@ -2,14 +2,19 @@ import {
     combineReducers
 } from "redux";
 import {
-    ACTIONS_CONSTS
-} from "./actions";
-import {
     message
 } from "antd";
 import {
-    STATUS_CODE
+    STATUS_CODE,
+    ACTIONS_CONSTS,
+    FAIL_INFOS,
+    SUCC_INFOS
 } from "./CONSTS";
+
+// message are shown in reducers.js 201804161439
+import {
+    CommonMessage
+} from "./util";
 
 let {
     PENDING,
@@ -17,20 +22,6 @@ let {
     REJECTED,
     RESOLVED
 } = STATUS_CODE;
-
-// infos
-const FAIL_INFOS = {
-    FETCH: '获取信息失败，请重试',
-    SUBMIT: '提交失败，请重试',
-    UPDATE: '更新失败，请重试',
-    DELETE: '删除失败，请重试'
-};
-const SUCC_INFOS = {
-    FETCH: '成功获取信息',
-    SUBMIT: '提交成功',
-    UPDATE: '更新成功',
-    DELETE: '删除成功'
-};
 
 function Certification(state, action) {
     switch (action.type) {
@@ -43,20 +34,9 @@ function Certification(state, action) {
             }
         case ACTIONS_CONSTS.CER.CER_DATA_STATUS_CHANGE:
             {
+
                 let status = action.status;
-                if (status === 'rejected') {
-                    message.error(FAIL_INFOS.FETCH, 1);
-                    return {
-                        ...state,
-                        status,
-                        msg: FAIL_INFOS.FETCH
-                    }
-                } else if (status === 'resolved') {
-                    message.success(SUCC_INFOS.FETCH, 1);
-
-                } else if (status === 'pending') {
-
-                }
+                CommonMessage(status, 'fetch');
                 return {
                     ...state,
                     status
@@ -124,17 +104,81 @@ function Account(state, action) {
 
 function Order(state, action) {
     switch (action.type) {
-        default: {
-            return {
-                orderData: [],
-                orderDataStatus: INIT,
-                encashRecordData: [],
-                encashRecordDataStatus: INIT,
-                encashSummary: null,
-                encashSummaryStatus: INIT,
-                encashSubmitStatus: INIT
+        case ACTIONS_CONSTS.ORDER.ORDER_DATA_STATUS_CHANGE:
+            {
+                CommonMessage(action.status, 'fetch');
+                return {
+                    ...state,
+                    orderDataStatus: action.status
+                }
             }
-        }
+        case ACTIONS_CONSTS.ORDER.ORDER_DATA:
+            {
+                return {
+                    ...state,
+                    orderData: action.data
+                }
+            }
+        case ACTIONS_CONSTS.ORDER.ORDER_DATA_TOTAL:
+            {
+                return {
+                    ...state,
+                    orderDataTotal: action.total
+                }
+            }
+        case ACTIONS_CONSTS.ORDER.ORDER_DATA_PAGE_CHANGE:
+            {
+                return {
+                    ...state,
+                    orderDataCurrentPage: state.orderDataCurrentPage + action.step
+                }
+            }
+        case ACTIONS_CONSTS.ORDER.ENCASH_DATA:
+            {
+                return {
+                    ...state,
+                    encashRecordData: action.data
+                }
+            }
+        case ACTIONS_CONSTS.ORDER.ENCASH_DATA_STATUS:
+            {
+                CommonMessage(action.status, 'fetch');
+                return {
+                    ...state,
+                    encashRecordDataStatus: action.status
+                }
+            }
+        case ACTIONS_CONSTS.ORDER.ENCASH_DATA_PAGE_CHANGE:
+            {
+                return {
+                    ...state,
+                    encashRecordDataCurrentPage: state.encashRecordDataCurrentPage + action.step
+                }
+            }
+        case ACTIONS_CONSTS.ORDER.ORDER_DATA_CLEAR:
+            {
+                return {
+                    ...state,
+                    orderData: [],
+                    encashRecordData: [],
+                }
+            }
+        default:
+            {
+                return {
+                    orderData: [],
+                    orderDataStatus: INIT,
+                    orderDataTotal: 50,
+                    orderDataCurrentPage: 1,
+                    encashRecordData: [],
+                    encashRecordDataStatus: INIT,
+                    encashRecordDataTotal: 50,
+                    encashRecordDataCurrentPage: 1,
+                    encashSummary: null,
+                    encashSummaryStatus: INIT,
+                    encashSubmitStatus: INIT
+                }
+            }
     }
 }
 

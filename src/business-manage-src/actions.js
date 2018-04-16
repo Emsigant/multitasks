@@ -1,7 +1,8 @@
 import {
     STATUS_CODE,
     APIS,
-    COMMON_FETCH_OPTIONS
+    COMMON_FETCH_OPTIONS,
+    ACTIONS_CONSTS
 } from "./CONSTS";
 
 let {
@@ -15,26 +16,9 @@ let {
 } = STATUS_CODE;
 
 // mode: dev or prod
-const ENV = 'dev';
+const ENV = 'prod';
 
-// business auth actions
-export const ACTIONS_CONSTS = {
-    // 商家认证
-    CER: {
-        CER_DATA: 'CER_DATA',
-        CER_DATA_STATUS_CHANGE: 'CET_DATA_STATUS_CHANGE',
-        CER_SUBMIT: 'CER_SUBMIT',
-        CER_SUBMIT_STATUS_CHANGE: 'CER_SUBMIT_STATUS_CHANGE',
-        CER_CLEAR: 'CER_CLEAR'
-    },
-    ACCOUNT: {
-        ACCOUNT_SUBMIT_STATUS_CHANGE: 'ACCOUNT_SUBMIT_STATUS_CHANGE'
-    },
-    ORDER: {
-        ORDER_DATA: 'ORDER_DATA',
-        ORDER_DATA_STATUS_CHANGE: 'ORDER_DATA_STATUS_CHANGE'
-    }
-}
+// certification module
 export function CerData(data) {
     return {
         type: ACTIONS_CONSTS.CER.CER_DATA,
@@ -134,7 +118,7 @@ export function CerSubmit(data) {
     }
 }
 
-// account manage actions
+// account manage module
 // account submit status: pending, resolved, rejected, invalid
 export function AccountSubmitStatusChange(status) {
     return {
@@ -193,10 +177,18 @@ export function AccountSubmit(data) {
 }
 
 // order module
+// order data
 function OrderData(data) {
     return {
         type: ACTIONS_CONSTS.ORDER.ORDER_DATA,
         data
+    }
+}
+
+function OrderTotal(total) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.ORDER_DATA_TOTAL,
+        total
     }
 }
 
@@ -206,18 +198,107 @@ function OrderDataStatusChange(status) {
         status
     }
 }
-export function FetchOrderData() {
+
+let fakeOrderData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => {
+    return {
+        key: item,
+        "address": "121",
+        "orderTotalAmount": 1,
+        "showName": "1",
+        "startTime": 1523239778000,
+        "status": "1",
+        "typeName": "1"
+    }
+});
+
+export function FetchOrderData(pageNo = 1, pageSize = 10) {
     return (dispatch, getState) => {
         dispatch(OrderDataStatusChange(PENDING));
         if (ENV === 'dev') {
             setTimeout(() => {
                 dispatch(OrderDataStatusChange(RESOLVED));
-                dispatch(OrderData(
-                    [1,2,3,4,5]
-                ));
+                dispatch(OrderData(fakeOrderData));
+            }, 500);
+        } else if (ENV === 'prod') {
+            fetch(APIS.ORDER_QUERY, {
+                    body: JSON.stringify({
+                        pageNo,
+                        pageSize
+                    }),
+                    method: 'post',
+                    ...COMMON_FETCH_OPTIONS
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        dispatch(OrderDataStatusChange(RESOLVED));
+                        dispatch(OrderData(res.content.dataList));
+                        dispatch(OrderTotal(res.totalCount));
+                    } else {
+                        dispatch(OrderDataStatusChange(REJECTED));
+                    }
+                })
+                .catch(err => {
+                    dispatch(OrderDataStatusChange(REJECTED));
+                })
+        }
+    }
+}
+// encash record data
+function EncashRecordData(data) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.ENCASH_DATA,
+        data
+    }
+}
+
+function EncashRecordDataStatusChange(status) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.ENCASH_DATA_STATUS,
+        status
+    }
+}
+export function FetchEncashRecordData() {
+    return (dispatch, getState) => {
+        dispatch(EncashRecordDataStatusChange(PENDING));
+        if (ENV === 'dev') {
+            setTimeout(() => {
+                dispatch(EncashRecordDataStatusChange(RESOLVED));
+                dispatch(EncashRecordData(
+                    [1, 2, 3, 4, 5]
+                ))
             }, 500);
         } else if (ENV === 'prod') {
 
         }
+    }
+}
+
+// clear order data
+export function OrderDataClear() {
+    return {
+        type: ACTIONS_CONSTS.ORDER.ORDER_DATA_CLEAR
+    }
+}
+export function OrderPageChange(type) {
+    switch (type) {
+        case 'order-data':
+            {
+                return (step) => ({
+                    type: ACTIONS_CONSTS.ORDER.ORDER_DATA_PAGE_CHANGE,
+                    step
+                })
+            }
+            break;
+        case 'encash-record':
+            {
+                return (step) => ({
+                    type: ACTIONS_CONSTS.ORDER.ENCASH_DATA_PAGE_CHANGE,
+                    step
+                })
+            }
+            break;
+        default:
+            break;
     }
 }

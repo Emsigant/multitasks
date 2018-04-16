@@ -13,10 +13,10 @@ const FAIL_INFOS = {
     DELETE: '删除失败，请重试'
 };
 const SUCC_INFOS = {
-    FETCH: '获取成功',
-    SUBMIT: '提交成功',
-    UPDATE: '更新成功',
-    DELETE: '删除成功'
+    FETCH: '成功获取数据',
+    SUBMIT: '成功提交数据',
+    UPDATE: '成功更新数据',
+    DELETE: '成功删除数据'
 };
 
 /**
@@ -25,20 +25,21 @@ const SUCC_INFOS = {
  * @param {string} actionType oneof['UPDATE', 'SUBMIT', 'FETCH','DELETE']
  */
 export function CommonMessage(currentStatus, actionType) {
+    actionType = actionType.toUpperCase();
     switch (currentStatus) {
         case STATUS_CODE.REJECTED:
             {
-                message.error(FAIL_INFOS[actionType], 1);
+                message.error(FAIL_INFOS[actionType], .5);
             }
             break;
         case STATUS_CODE.RESOLVED:
             {
-                message.success(SUCC_INFOS[actionType], 1);
+                message.success(SUCC_INFOS[actionType], .5);
             }
             break;
         case STATUS_CODE.PSW_WRONG:
             {
-                message.error('旧密码不正确，请重试', 1);
+                message.error('旧密码不正确，请重试', .5);
             }
             break;
         case STATUS_CODE.INIT:
@@ -53,12 +54,12 @@ export function CommonMessage(currentStatus, actionType) {
             break;
         case STATUS_CODE.NOT_LOGIN:
             {
-                message.error('未登录，请先登录', 1);
+                message.error('未登录，请先登录', .5);
             }
             break;
         case STATUS_CODE.NOT_EXIST:
             {
-                message.error('用户不存在，请重试', 1);
+                message.error('用户不存在，请重试', .5);
             }
             break;
         default:
