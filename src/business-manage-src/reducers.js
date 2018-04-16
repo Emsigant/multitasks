@@ -168,11 +168,11 @@ function Order(state, action) {
                 return {
                     orderData: [],
                     orderDataStatus: INIT,
-                    orderDataTotal: 50,
+                    orderDataTotal: 1,
                     orderDataCurrentPage: 1,
                     encashRecordData: [],
                     encashRecordDataStatus: INIT,
-                    encashRecordDataTotal: 50,
+                    encashRecordDataTotal: 1,
                     encashRecordDataCurrentPage: 1,
                     encashSummary: null,
                     encashSummaryStatus: INIT,

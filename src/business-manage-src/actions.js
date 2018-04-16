@@ -233,7 +233,7 @@ export function FetchOrderData(pageNo = 1, pageSize = 10) {
                     if (res.code === '1') {
                         dispatch(OrderDataStatusChange(RESOLVED));
                         dispatch(OrderData(res.content.dataList));
-                        dispatch(OrderTotal(res.totalCount));
+                        dispatch(OrderTotal(res.content.totalCount));
                     } else {
                         dispatch(OrderDataStatusChange(REJECTED));
                     }

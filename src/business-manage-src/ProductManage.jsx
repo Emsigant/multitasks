@@ -5,7 +5,7 @@ class ProductManage extends Component {
     render() {
         return (
             <div className="route-view">
-                <div>this is product manage</div>
+                <div>this is product manage, and some changes</div>
             </div>
         )
     }
