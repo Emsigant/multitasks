@@ -13,7 +13,7 @@ import { Input, Icon } from "antd";
  */
 class WrappedInput extends Component {
 	render() {
-		let { prefixType, holder, change, inputValue, target, touched, type='text' } = this.props;
+		let { prefixType, holder, change, inputValue, target, touched, type = 'text', width = '270px' } = this.props;
 		let msg = `请输入${holder}`;
 		let showWarning = inputValue === '' && touched;
 		return (
@@ -24,8 +24,8 @@ class WrappedInput extends Component {
 					data-target={target}
 					onChange={change}
 					value={inputValue}
-                    style={{ width: '270px' }}
-                    type={type}
+					style={{ width }}
+					type={type}
 				/>
 				{
 					showWarning ?

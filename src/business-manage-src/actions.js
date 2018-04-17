@@ -4,6 +4,9 @@ import {
     COMMON_FETCH_OPTIONS,
     ACTIONS_CONSTS
 } from "./CONSTS";
+import {
+    FormatTime
+} from "./util";
 
 let {
     REJECTED,
@@ -201,23 +204,35 @@ function OrderDataStatusChange(status) {
 
 let fakeOrderData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => {
     return {
-        key: item,
+        "orderId": 'wi' + item,
         "address": "121",
         "orderTotalAmount": 1,
         "showName": "1",
-        "startTime": 1523239778000,
+        "startTime": "1523239778000",
         "status": "1",
         "typeName": "1"
     }
 });
-
+let mapOrderCodeToStatus = {
+    '0': '未付款',
+    '1': '已付款',
+    '2': '已出票',
+    '3': '未付款已过期',
+    '4': '取消交易'
+};
 export function FetchOrderData(pageNo = 1, pageSize = 10) {
     return (dispatch, getState) => {
         dispatch(OrderDataStatusChange(PENDING));
         if (ENV === 'dev') {
             setTimeout(() => {
                 dispatch(OrderDataStatusChange(RESOLVED));
-                dispatch(OrderData(fakeOrderData));
+                dispatch(OrderData(fakeOrderData.map(item => ({
+                    ...item,
+                    startTime: FormatTime(item.startTime),
+                    status: mapOrderCodeToStatus[item.status],
+                    orderTotalAmount: +item.orderTotalAmount / 100
+                }))));
+                dispatch(OrderTotal(100));
             }, 500);
         } else if (ENV === 'prod') {
             fetch(APIS.ORDER_QUERY, {
@@ -232,7 +247,15 @@ export function FetchOrderData(pageNo = 1, pageSize = 10) {
                 .then(res => {
                     if (res.code === '1') {
                         dispatch(OrderDataStatusChange(RESOLVED));
-                        dispatch(OrderData(res.content.dataList));
+                        let dataList = res.content.dataList;
+                        dispatch(OrderData(
+                            dataList.map(item => ({
+                                ...item,
+                                startTime: FormatTime(item.startTime),
+                                status: mapOrderCodeToStatus[item.status],
+                                orderTotalAmount: +item.orderTotalAmount / 100
+                            }))
+                        ));
                         dispatch(OrderTotal(res.content.totalCount));
                     } else {
                         dispatch(OrderDataStatusChange(REJECTED));
@@ -252,24 +275,75 @@ function EncashRecordData(data) {
     }
 }
 
+function EncashTotal(total) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.ENCASH_TOTAL,
+        total
+    }
+}
+
 function EncashRecordDataStatusChange(status) {
     return {
         type: ACTIONS_CONSTS.ORDER.ENCASH_DATA_STATUS,
         status
     }
 }
-export function FetchEncashRecordData() {
+let fakeEncashData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => ({
+    "withdrawOrderId": 'woid' + item,
+    "bankCardNo": "10086",
+    "bankName": "于北川",
+    "amount": 9978,
+    "updateTime": 1563867194000,
+    "status": "0",
+}));
+let mapCodeToEncashStatus = {
+    '0': '提现中',
+    '1': '提现成功',
+    '2': '提现失败',
+}
+export function FetchEncashRecordData(pageNo = 1, pageSize = 10) {
     return (dispatch, getState) => {
         dispatch(EncashRecordDataStatusChange(PENDING));
         if (ENV === 'dev') {
             setTimeout(() => {
                 dispatch(EncashRecordDataStatusChange(RESOLVED));
                 dispatch(EncashRecordData(
-                    [1, 2, 3, 4, 5]
-                ))
+                    fakeEncashData.map(item => ({
+                        ...item,
+                        status: mapCodeToEncashStatus[item.status],
+                        updateTime: FormatTime(item.updateTime)
+                    }))
+                ));
+                dispatch(EncashTotal(100));
             }, 500);
         } else if (ENV === 'prod') {
-
+            fetch(APIS.ENCASH_RECORD_QUERY, {
+                    method: 'post',
+                    body: JSON.stringify({
+                        pageNo,
+                        pageSize
+                    }),
+                    ...COMMON_FETCH_OPTIONS
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        dispatch(EncashRecordDataStatusChange(RESOLVED));
+                        let data = res.content.dataList;
+                        dispatch(EncashRecordData(data.map(item => ({
+                            ...item,
+                            status: mapCodeToEncashStatus[item.status],
+                            updateTime: FormatTime(item.updateTime)
+                        }))));
+                        dispatch(EncashTotal(res.content.totalCount));
+                    } else {
+                        dispatch(EncashRecordDataStatusChange(REJECTED));
+                    }
+                })
+                .catch(err => {
+                    dispatch(EncashRecordDataStatusChange(REJECTED));
+                    console.log(err);
+                })
         }
     }
 }
@@ -280,7 +354,7 @@ export function OrderDataClear() {
         type: ACTIONS_CONSTS.ORDER.ORDER_DATA_CLEAR
     }
 }
-// vendor page change function for encash-record and order-data
+// vendor page change handle function for encash-record and order-data
 export function OrderPageChange(type) {
     switch (type) {
         case 'order-data':
@@ -300,6 +374,58 @@ export function OrderPageChange(type) {
             }
             break;
         default:
-            break;
+            {
+                throw new Error('Unknown page change event');
+            }
+    }
+}
+
+function SubmitWithdrawStatusChange(status) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.ENCASH_SUBMIT_STATUS,
+        status
+    }
+}
+
+function IncomeData(data) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.INCOME_DATA,
+        data
+    }
+}
+
+function IncomeDataFetchStatus(status) {
+    return {
+        type: ACTIONS_CONSTS.ORDER.INCOME_DATA_FETCH_STATUS,
+        status
+    }
+}
+export function FetchIncomeData() {
+    return (dispatch, getState) => {
+        dispatch(IncomeDataFetchStatus(PENDING));
+        if (ENV === 'dev') {
+            setTimeout(() => {
+                dispatch(IncomeDataFetchStatus(RESOLVED));
+                dispatch(IncomeData({
+                    total: 20000
+                }));
+            }, 500);
+        } else if (ENV === 'prod') {
+
+        }
+    }
+}
+
+export function SubmitWithdraw(data) {
+    return (dispatch, getState) => {
+        dispatch(SubmitWithdrawStatusChange(PENDING));
+        if (ENV === 'dev') {
+            setTimeout(() => {
+                dispatch(SubmitWithdrawStatusChange(RESOLVED));
+                dispatch(FetchIncomeData());
+            }, 500);
+        } else if (ENV === 'prod') {
+
+        }
     }
 }

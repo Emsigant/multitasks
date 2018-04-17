@@ -140,6 +140,13 @@ function Order(state, action) {
                     encashRecordData: action.data
                 }
             }
+        case ACTIONS_CONSTS.ORDER.ENCASH_TOTAL:
+            {
+                return {
+                    ...state,
+                    encashRecordDataTotal: action.total
+                }
+            }
         case ACTIONS_CONSTS.ORDER.ENCASH_DATA_STATUS:
             {
                 CommonMessage(action.status, 'fetch');
@@ -163,6 +170,29 @@ function Order(state, action) {
                     encashRecordData: [],
                 }
             }
+        case ACTIONS_CONSTS.ORDER.ENCASH_SUBMIT_STATUS:
+            {
+                CommonMessage(action.status, 'submit');
+                return {
+                    ...state,
+                    encashSubmitStatus: action.status
+                }
+            }
+        case ACTIONS_CONSTS.ORDER.INCOME_DATA:
+            {
+                return {
+                    ...state,
+                    incomeData: action.data
+                }
+            }
+        case ACTIONS_CONSTS.ORDER.INCOME_DATA_FETCH_STATUS:
+            {
+                CommonMessage(action.status, 'fetch');
+                return {
+                    ...state,
+                    incomeDataFetchStatus: action.status
+                }
+            }
         default:
             {
                 return {
@@ -174,8 +204,8 @@ function Order(state, action) {
                     encashRecordDataStatus: INIT,
                     encashRecordDataTotal: 1,
                     encashRecordDataCurrentPage: 1,
-                    encashSummary: null,
-                    encashSummaryStatus: INIT,
+                    incomeData: null,
+                    incomeDataFetchStatus: INIT,
                     encashSubmitStatus: INIT
                 }
             }
