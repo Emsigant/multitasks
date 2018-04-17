@@ -61,5 +61,14 @@ export function CommonMessage(currentStatus, actionType) {
 export function FormatTime(timeStamp) {
     timeStamp = +timeStamp;
     let date = new Date(timeStamp);
-    return (`${date.getFullYear()}-${date.getMonth()<9?'0'+(date.getMonth()+1):(date.getMonth()+1)}-${date.getDate()<10?'0'+date.getDate():date.getDate()} ${date.getHours()}:${date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()}`)
+    let getFullYear = date.getFullYear(),
+        getMonth = date.getMonth() + 1,
+        getDate = date.getDate(),
+        getHours = date.getHours(),
+        getMinutes = date.getMinutes();
+    getMonth = getMonth < 10 ? '0' + getMonth : getMonth;
+    getDate = getDate < 10 ? '0' + getDate : getDate;
+    getHours = getHours < 10 ? '0' + getHours : getHours;
+    getMinutes = getMinutes < 10 ? '0' + getMinutes : getMinutes;
+    return `${getFullYear}-${getMonth}-${getDate} ${getHours}:${getMinutes}`;
 }
