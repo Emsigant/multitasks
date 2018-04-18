@@ -81,7 +81,7 @@ let ConnectedEncashRecord = ComponentGenerator({
         }
     },
     uniqueKeyPrefix: 'withdrawOrderId',
-    tableColumns: ['提现银行卡号', '收款人', '提现金额', '提现时间', '提现状态'].map(item => ({
+    tableColumns: ['提现银行卡号', '收款人', '提现金额(分)', '提现时间', '提现状态'].map(item => ({
         title: item,
         dataIndex: mapTitleToKeyInOrder[item],
         key: mapTitleToKeyInOrder[item],
@@ -105,21 +105,27 @@ class WithdrawPage extends Component {
         return (
             <div>
                 <div className='plain-div-with-padding'>
-                    <span>当前可用余额：</span>
-                    {incomeData ? incomeData.total : 0}
+                    <div>当前可用余额：</div>
+                    {incomeData ? '￥' + (incomeData.userAccount.availableAmount / 100).toFixed(2) : 0}
                 </div>
-                <div className='plain-div-with-padding'>
-                    <span style={{ marginRight: '1rem' }}>请输入提现金额：</span>
+                <div className="plain-div-with-padding">
+                    <div>历史总收入：</div>
+                    {incomeData ? '￥' + (incomeData.userAccount.totalAmount / 100).toFixed(2) : 0}
+                </div>
+                <div style={{ padding: '.5rem 0' }}>
+                    <span>请输入提现金额：</span>
                     <InputNumber
-                        min={0}
-                        max={incomeData ? incomeData.total : 0}
-                        value={withdrawAmount}
                         style={{ marginRight: '1rem' }}
+                        min={0}
+                        max={incomeData ? incomeData.userAccount.availableAmount / 100 : 0}
+                        value={withdrawAmount}
                         onChange={(e) => {
                             if (e === '') { this.setState({ withdrawAmount: 0 }) }
                             this.setState({ withdrawAmount: e });
                         }} />
-                    <Button type='primary' onClick={() => dispatch(SubmitWithdraw(2000))} loading={submitStatus === 'pending'} disabled={withdrawAmount < 1}>
+                    <Button type='primary' onClick={() => dispatch(SubmitWithdraw({
+                        amount: withdrawAmount * 100
+                    }))} loading={submitStatus === 'pending'} disabled={withdrawAmount === 0}>
                         提现
                 </Button>
                 </div>

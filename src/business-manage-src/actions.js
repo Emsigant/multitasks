@@ -19,7 +19,7 @@ let {
 } = STATUS_CODE;
 
 // mode: dev or prod
-const ENV = 'dev';
+const ENV = 'prod';
 
 // certification module
 export function CerData(data) {
@@ -407,11 +407,37 @@ export function FetchIncomeData() {
             setTimeout(() => {
                 dispatch(IncomeDataFetchStatus(RESOLVED));
                 dispatch(IncomeData({
-                    total: 20000
+                    "totalOrders": 24,
+                    "userAccount": {
+                        "availableAmount": 19,
+                        "createTime": 1523959986000,
+                        "freezeAmount": 0,
+                        "id": 0,
+                        "status": "0",
+                        "totalAmount": 100,
+                        "updateTime": 1523960114000,
+                        "userId": "UI0000000002"
+                    }
                 }));
             }, 500);
         } else if (ENV === 'prod') {
-
+            fetch(APIS.INCOME_DATA_QUERY, {
+                    method: 'post',
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        dispatch(IncomeDataFetchStatus(RESOLVED));
+                        dispatch(IncomeData(res.content));
+                    } else {
+                        dispatch(IncomeDataFetchStatus(REJECTED));
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    dispatch(IncomeDataFetchStatus(REJECTED));
+                });
         }
     }
 }
@@ -421,11 +447,28 @@ export function SubmitWithdraw(data) {
         dispatch(SubmitWithdrawStatusChange(PENDING));
         if (ENV === 'dev') {
             setTimeout(() => {
+                console.log(data);
                 dispatch(SubmitWithdrawStatusChange(RESOLVED));
                 dispatch(FetchIncomeData());
             }, 500);
         } else if (ENV === 'prod') {
-
+            fetch(APIS.ENCASH_SUBMIT_WITHDRAW, {
+                    method: 'post',
+                    body: JSON.stringify(data),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        dispatch(SubmitWithdrawStatusChange(RESOLVED));
+                        dispatch(FetchIncomeData());
+                    } else {
+                        dispatch(SubmitWithdrawStatusChange(REJECTED));
+                    }
+                })
+                .catch(err => {
+                    dispatch(SubmitWithdrawStatusChange(REJECTED));
+                });
         }
     }
 }

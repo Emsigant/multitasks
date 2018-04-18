@@ -16,7 +16,8 @@ export const APIS = {
     MODIFY_PASSWORD: '/business/password/modify',
     ORDER_QUERY: '/business/order/queryList',
     ENCASH_RECORD_QUERY: '/business/withdraw/queryList',
-    ENCASH_SUBMIT_WITHDRAW: '/business/withdraw'
+    ENCASH_SUBMIT_WITHDRAW: '/business/withdraw',
+    INCOME_DATA_QUERY: '/business/revenue',
 };
 
 // fetch的通用配置 fetch(url, { ...otherOptions, ...COMMON_FETCH_OPTIONS })
@@ -51,7 +52,7 @@ export const ACTIONS_CONSTS = {
         ENCASH_TOTAL: '13',
         ENCASH_DATA_STATUS: '14',
         ENCASH_DATA_PAGE_CHANGE: '15',
-        ENCASH_SUBMIT_STATUS:'16',
+        ENCASH_SUBMIT_STATUS: '16',
         INCOME_DATA: '17',
         INCOME_DATA_FETCH_STATUS: '18',
     }
@@ -82,5 +83,5 @@ export const mapTitleToKeyInOrder = {
     '提现时间': 'updateTime',
     '提现银行卡号': 'bankCardNo',
     '收款人': 'bankName',
-    '提现状态':'status'
+    '提现状态': 'status'
 };
