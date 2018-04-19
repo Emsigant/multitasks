@@ -1,3 +1,4 @@
+// 商家管理和管路员登录的公用登录页面 视情况修改对应部分
 import React, { Component } from 'react';
 import './App.css';
 
@@ -40,7 +41,7 @@ class LoginFrame extends Component {
     this.setState({
       loading: true
     });
-    fetch('/business/login',
+    fetch('/admin/login',
       {
         body: JSON.stringify({
           phone: this.state.u,
@@ -57,7 +58,7 @@ class LoginFrame extends Component {
         switch (resp.code) {
           case '1': {
             message.success('登录成功');
-            window.location.href = '/business/index';
+            window.location.href = '/admin/index';
           } break;
           case '2': {
             message.info('已登录');
@@ -75,6 +76,7 @@ class LoginFrame extends Component {
       })
       .catch(err => {
         message.error('登录失败，请重试');
+        console.log(err);
         this.setState({
           loading: false
         });
@@ -84,7 +86,7 @@ class LoginFrame extends Component {
     let { p, u, pF, uF, loading } = this.state;
     return (
       <div className="login-frame">
-        <p className='login-header'>登录</p>
+        <p className='login-header'>管理员登录</p>
         <Input
           onChange={(e) => { this.onChange(e) }}
           value={u}
@@ -115,7 +117,7 @@ class LoginFrame extends Component {
           disabled={!(p !== '' && u !== '' && pF && uF)}
           onClick={() => { this.login() }}
         >登录</Button>
-        <p className='frame-footer'><Link to='/register'>注册账号</Link></p>
+        {/* <p className='frame-footer'><Link to='/register'>注册账号</Link></p> */}
       </div>
     )
   }
