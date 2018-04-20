@@ -19,7 +19,7 @@ let {
 } = STATUS_CODE;
 
 // mode: dev or prod
-const ENV = 'dev';
+const ENV = 'prod';
 
 // certification module
 export function CerData(data) {

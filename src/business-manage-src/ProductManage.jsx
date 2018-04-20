@@ -255,7 +255,6 @@ class ProductManage extends Component {
                             withCredentials={true}
                             showUploadList={false}
                             onChange={(upload) => {
-                                console.log(upload.file);
                                 if (upload.file.status === 'done' && upload.file.response.code === '1') {
                                     message.success('上传图片成功', .5);
                                     this.setState({
