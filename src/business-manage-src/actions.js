@@ -615,7 +615,7 @@ export function SubmitProductData(data, pageNo) {
                 dispatch(FetchProductData(pageNo));
             }, 500);
         } else {
-            fetch('/', {
+            fetch(APIS.SHOW_ADD, {
                     method: 'post',
                     body: JSON.stringify(data),
                     ...COMMON_FETCH_OPTIONS,

@@ -19,6 +19,7 @@ export const APIS = {
     ENCASH_SUBMIT_WITHDRAW: '/business/withdraw',
     INCOME_DATA_QUERY: '/business/revenue',
     SHOW_QUERYLIST: '/business/show/queryList',
+    SHOW_ADD:'/business/product/insert',
 };
 
 // fetch的通用配置 fetch(url, { ...otherOptions, ...COMMON_FETCH_OPTIONS })
