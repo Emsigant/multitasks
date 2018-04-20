@@ -515,8 +515,45 @@ let fakeProductContent = (pageNo, pageSize) => ({
         "typeName": "演唱会",
         "updateTime": 1524133658000,
         "userId": "UI0000000002",
-        "userName": "wxn"
-    }))
+        "userName": "wxn",
+        "productInfoList": [{
+                "price": 88800,
+                "productId": "PI0000000004",
+                "showAreaId": "AI0000000001",
+                "showAreaName": "贵宾席",
+                "showId": "SI0000000004",
+                "status": "0",
+                "stock": 250
+            },
+            {
+                "price": 28000,
+                "productId": "PI0000000005",
+                "showAreaId": "AI0000000001",
+                "showAreaName": "贵宾席",
+                "showId": "SI0000000004",
+                "status": "0",
+                "stock": 500
+            },
+            {
+                "price": 128000,
+                "productId": "PI0000000006",
+                "showAreaId": "AI0000000001",
+                "showAreaName": "贵宾席",
+                "showId": "SI0000000004",
+                "status": "0",
+                "stock": 50
+            },
+            {
+                "price": 999900,
+                "productId": "PI0000000010",
+                "showAreaId": "AI0000000001",
+                "showAreaName": "贵宾席",
+                "showId": "SI0000000004",
+                "status": "0",
+                "stock": 10
+            }
+        ],
+    })),
 });
 
 export function FetchProductData(pageNo = 1, pageSize = 10) {
@@ -558,5 +595,44 @@ export function ProductPageChange(diff) {
     return {
         type: ACTIONS_CONSTS.PRODUCT.PRODUCT_PAGE_CHANGE,
         diff,
+    }
+}
+
+function SubmitProductStatusChange(status) {
+    return {
+        type: ACTIONS_CONSTS.PRODUCT.SUBMIT_PRODUCT_STATUS_CHANGE,
+        status,
+    }
+}
+
+export function SubmitProductData(data, pageNo) {
+    return (dispatch, getState) => {
+        dispatch(SubmitProductStatusChange(PENDING));
+        if (ENV === 'dev') {
+            setTimeout(() => {
+                console.log(data);
+                dispatch(SubmitProductStatusChange(RESOLVED));
+                dispatch(FetchProductData(pageNo));
+            }, 500);
+        } else {
+            fetch('/', {
+                    method: 'post',
+                    body: JSON.stringify(data),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        dispatch(SubmitProductStatusChange(RESOLVED));
+                        dispatch(FetchProductData(pageNo));
+                    } else {
+                        dispatch(SubmitProductStatusChange(REJECTED));
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    dispatch(SubmitProductStatusChange(REJECTED));
+                });
+        }
     }
 }

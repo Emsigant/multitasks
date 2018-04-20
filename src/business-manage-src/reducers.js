@@ -239,6 +239,14 @@ function Product(state, action) {
                     pageNo: state.pageNo + action.diff,
                 }
             }
+        case ACTIONS_CONSTS.PRODUCT.SUBMIT_PRODUCT_STATUS_CHANGE:
+            {
+                CommonMessage(action.status, 'submit');
+                return {
+                    ...state,
+                    submitStatus: action.status,
+                }
+            }
         default:
             {
                 return {
@@ -247,6 +255,7 @@ function Product(state, action) {
                     pageSize: 1,
                     totalCount: 1,
                     fetchStatus: 'init',
+                    submitStatus: 'init',
                 }
             }
     }
