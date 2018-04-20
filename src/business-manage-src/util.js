@@ -58,6 +58,20 @@ export function CommonMessage(currentStatus, actionType) {
     }
 }
 
+/**
+ * 
+ * @param {number} num 
+ * @returns {string}
+ */
+function formatNumberToString(num) {
+    return +num < 10 ? '0' + num : '' + num;
+}
+
+/**
+ * 
+ * @param {number} timeStamp
+ * @returns {string}
+ */
 export function FormatTime(timeStamp) {
     timeStamp = +timeStamp;
     let date = new Date(timeStamp);
@@ -66,9 +80,9 @@ export function FormatTime(timeStamp) {
         getDate = date.getDate(),
         getHours = date.getHours(),
         getMinutes = date.getMinutes();
-    getMonth = getMonth < 10 ? '0' + getMonth : getMonth;
-    getDate = getDate < 10 ? '0' + getDate : getDate;
-    getHours = getHours < 10 ? '0' + getHours : getHours;
-    getMinutes = getMinutes < 10 ? '0' + getMinutes : getMinutes;
+    getMonth = formatNumberToString(getMonth);
+    getDate = formatNumberToString(getDate);
+    getHours = formatNumberToString(getHours);
+    getMinutes = formatNumberToString(getMinutes);
     return `${getFullYear}-${getMonth}-${getDate} ${getHours}:${getMinutes}`;
 }

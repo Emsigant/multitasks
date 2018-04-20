@@ -7,7 +7,7 @@ import {
 import {
     FormatTime
 } from "./util";
-
+import image from '../r4.jpg';
 let {
     REJECTED,
     RESOLVED,
@@ -19,7 +19,7 @@ let {
 } = STATUS_CODE;
 
 // mode: dev or prod
-const ENV = 'prod';
+const ENV = 'dev';
 
 // certification module
 export function CerData(data) {
@@ -470,5 +470,93 @@ export function SubmitWithdraw(data) {
                     dispatch(SubmitWithdrawStatusChange(REJECTED));
                 });
         }
+    }
+}
+
+// 商品管理模块
+function PushContentToStore(content) {
+    return {
+        type: ACTIONS_CONSTS.PRODUCT.PUSH_CONTENT_TO_STORE,
+        content,
+    }
+}
+
+function FetchProductStatusChange(status) {
+    return {
+        type: ACTIONS_CONSTS.PRODUCT.FETCH_PRODUCT_STATUS_CHANGE,
+        status,
+    }
+}
+
+let fakeProductContent = (pageNo, pageSize) => ({
+    pageNo,
+    pageSize,
+    totalCount: 50,
+    dataList: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(item => ({
+        "address": "yy16d",
+        "createTime": 1524133658000,
+        "endSaleTime": 1530360000000,
+        "extra": "",
+        "introduction": "炒鸡劲爆",
+        "location": "武汉",
+        "phone": "18627786302",
+        "shelfStatus": "1",
+        "showActor": "zzz",
+        "showContentImgUrl": image,
+        "showCoverUrl": image,
+        "showId": "SI0000000005" + item,
+        "showName": "相声",
+        "showTypeId": "1",
+        "singleShowDuration": 3600 + 60 * item,
+        "startSaleTime": 1527681600000,
+        "startTime": 1530360000000,
+        "status": "1",
+        "theaterName": "湖北剧院",
+        "typeName": "演唱会",
+        "updateTime": 1524133658000,
+        "userId": "UI0000000002",
+        "userName": "wxn"
+    }))
+});
+
+export function FetchProductData(pageNo = 1, pageSize = 10) {
+    return (dispatch, getState) => {
+        dispatch(FetchProductStatusChange(PENDING));
+        if (ENV === 'dev') {
+            setTimeout(() => {
+                dispatch(FetchProductStatusChange(RESOLVED));
+                dispatch(PushContentToStore(
+                    fakeProductContent(pageNo, pageSize)
+                ));
+            }, 500);
+        } else {
+            fetch(APIS.SHOW_QUERYLIST, {
+                    method: 'post',
+                    body: JSON.stringify({
+                        pageNo,
+                        pageSize,
+                    }),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        dispatch(FetchProductStatusChange(RESOLVED));
+                        dispatch(PushContentToStore(res.content));
+                    } else {
+                        dispatch(FetchProductStatusChange(REJECTED));
+                    }
+                })
+                .catch(err => {
+                    dispatch(FetchProductStatusChange(REJECTED));
+                });
+        }
+    }
+}
+
+export function ProductPageChange(diff) {
+    return {
+        type: ACTIONS_CONSTS.PRODUCT.PRODUCT_PAGE_CHANGE,
+        diff,
     }
 }

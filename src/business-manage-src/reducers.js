@@ -212,8 +212,49 @@ function Order(state, action) {
     }
 }
 
+function Product(state, action) {
+    switch (action.type) {
+        case ACTIONS_CONSTS.PRODUCT.PUSH_CONTENT_TO_STORE:
+            {
+                return {
+                    ...state,
+                    dataList: action.content.dataList,
+                    pageNo: action.content.pageNo,
+                    pageSize: action.content.pageSize,
+                    totalCount: action.content.totalCount,
+                }
+            }
+        case ACTIONS_CONSTS.PRODUCT.FETCH_PRODUCT_STATUS_CHANGE:
+            {
+                CommonMessage(action.status, 'fetch');
+                return {
+                    ...state,
+                    fetchStatus: action.status,
+                }
+            }
+        case ACTIONS_CONSTS.PRODUCT.PRODUCT_PAGE_CHANGE:
+            {
+                return {
+                    ...state,
+                    pageNo: state.pageNo + action.diff,
+                }
+            }
+        default:
+            {
+                return {
+                    dataList: [],
+                    pageNo: 1,
+                    pageSize: 1,
+                    totalCount: 1,
+                    fetchStatus: 'init',
+                }
+            }
+    }
+}
+
 export default combineReducers({
     Certification,
     Account,
-    Order
+    Order,
+    Product,
 });

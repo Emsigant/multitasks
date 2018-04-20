@@ -137,10 +137,24 @@ a {
     margin-left: .5rem;
     color: red;
 }
+
 .plain-div-with-padding {
     padding: .25rem 0;
     display: flex;
     div {
         width: 8rem;
+    }
+}
+
+.modal-info-content {
+    display: flex;
+    flex-direction: column;
+    .item {
+        padding: .25rem 0;
+        display: flex;
+        .title {
+            width: 8rem;
+            flex: none;
+        }
     }
 }
