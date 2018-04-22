@@ -288,13 +288,12 @@ class ProductManage extends Component {
                                 {
                                     title: '修改', render: (text, record) => (
                                         <Button
-                                            disabled={record.shelfStatus !== '2'}
                                             size='small' type='primary'
                                             onClick={() => {
                                                 this.setUpdateData(record);
                                                 this.setState({ showUpdateFormModal: true });
                                             }}
-                                        >{record.shelfStatus === '2' ? '修改' : '无法修改'}</Button>
+                                        ><Icon type="edit" />修改</Button>
                                     )
                                 },
                             ]
@@ -545,6 +544,7 @@ class ProductManage extends Component {
                         width={800}
                         style={{ top: 20 }}
                         onCancel={() => {
+                            this.setUpdateData({});
                             this.setState({ showUpdateFormModal: false });
                         }}
                         title='修改演出信息'
@@ -732,7 +732,7 @@ class ProductManage extends Component {
                                             />
                                             <Button
                                                 type='danger'
-                                                style={{ marginLeft: '1rem' }}
+                                                style={{ marginLeft: '1rem', visibility: item.productId ? 'hidden' : 'visible' }}
                                                 onClick={() => {
                                                     let _p = _update.productInfoList;
                                                     if (index === 0) {
