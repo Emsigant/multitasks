@@ -19,7 +19,8 @@ export const APIS = {
     ENCASH_SUBMIT_WITHDRAW: '/business/withdraw',
     INCOME_DATA_QUERY: '/business/revenue',
     SHOW_QUERYLIST: '/business/show/queryList',
-    SHOW_ADD:'/business/product/insert',
+    SHOW_ADD: '/business/product/insert',
+    SHOW_UPDATE: '/business/product/update',
 };
 
 // fetch的通用配置 fetch(url, { ...otherOptions, ...COMMON_FETCH_OPTIONS })
@@ -63,6 +64,7 @@ export const ACTIONS_CONSTS = {
         FETCH_PRODUCT_STATUS_CHANGE: '20',
         PRODUCT_PAGE_CHANGE: '21',
         SUBMIT_PRODUCT_STATUS_CHANGE: '22',
+        UPDATE_PRODUCT_STATUS_CHANGE: '23',
     }
 }
 

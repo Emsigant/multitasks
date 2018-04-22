@@ -19,7 +19,7 @@ let {
 } = STATUS_CODE;
 
 // mode: dev or prod
-const ENV = 'prod';
+const ENV = 'dev';
 
 // certification module
 export function CerData(data) {
@@ -500,7 +500,7 @@ let fakeProductContent = (pageNo, pageSize) => ({
         "introduction": "炒鸡劲爆",
         "location": "武汉",
         "phone": "18627786302",
-        "shelfStatus": "1",
+        "shelfStatus": item === 2 ? '2' : '1',
         "showActor": "zzz",
         "showContentImgUrl": image,
         "showCoverUrl": image,
@@ -591,17 +591,24 @@ export function FetchProductData(pageNo = 1, pageSize = 10) {
     }
 }
 
-export function ProductPageChange(diff) {
-    return {
-        type: ACTIONS_CONSTS.PRODUCT.PRODUCT_PAGE_CHANGE,
-        diff,
-    }
-}
-
 function SubmitProductStatusChange(status) {
     return {
         type: ACTIONS_CONSTS.PRODUCT.SUBMIT_PRODUCT_STATUS_CHANGE,
         status,
+    }
+}
+
+function UpdateProductStatusChange(status) {
+    return {
+        type: ACTIONS_CONSTS.PRODUCT.UPDATE_PRODUCT_STATUS_CHANGE,
+        status,
+    }
+}
+
+export function ProductPageChange(diff) {
+    return {
+        type: ACTIONS_CONSTS.PRODUCT.PRODUCT_PAGE_CHANGE,
+        diff,
     }
 }
 
@@ -632,6 +639,37 @@ export function SubmitProductData(data, pageNo) {
                 .catch(err => {
                     console.log(err);
                     dispatch(SubmitProductStatusChange(REJECTED));
+                });
+        }
+    }
+}
+
+export function UpdateProductData(data, pageNo) {
+    return (dispatch, getState) => {
+        dispatch(UpdateProductStatusChange(PENDING));
+        if (ENV === 'dev') {
+            console.log(data);
+            setTimeout(() => {
+                dispatch(UpdateProductStatusChange(RESOLVED));
+                dispatch(FetchProductData(pageNo));
+            }, 500);
+        } else {
+            fetch(APIS.SHOW_UPDATE, {
+                    method: 'post',
+                    body: JSON.stringify(data),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        dispatch(UpdateProductStatusChange(RESOLVED));
+                        dispatch(FetchProductData(pageNo));
+                    } else {
+                        dispatch(UpdateProductStatusChange(REJECTED));
+                    }
+                })
+                .catch(err => {
+                    dispatch(UpdateProductStatusChange(REJECTED));
                 });
         }
     }

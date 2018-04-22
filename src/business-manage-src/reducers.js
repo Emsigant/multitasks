@@ -247,6 +247,14 @@ function Product(state, action) {
                     submitStatus: action.status,
                 }
             }
+        case ACTIONS_CONSTS.PRODUCT.UPDATE_PRODUCT_STATUS_CHANGE:
+            {
+                CommonMessage(action.status, 'update');
+                return {
+                    ...state,
+                    updateStatus: action.status,
+                }
+            }
         default:
             {
                 return {
@@ -256,6 +264,7 @@ function Product(state, action) {
                     totalCount: 1,
                     fetchStatus: 'init',
                     submitStatus: 'init',
+                    updateStatus: 'init',
                 }
             }
     }
