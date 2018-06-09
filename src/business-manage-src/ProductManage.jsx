@@ -112,7 +112,7 @@ class ProductManage extends Component {
                 })
             } break;
             default: {
-                let reg = /$_*/;
+                let reg = /^_\S+$/;
                 if (reg.test(t)) {
                     t = Array.prototype.slice.call(t, 1).join('');
                     let _arr = t.split('-')
@@ -234,7 +234,7 @@ class ProductManage extends Component {
                                                         </div>
                                                         <div className='item'>
                                                             <div className="title">演出时间：</div>
-                                                            {(+record.singleShowDuration / 60)}分钟
+                                                            {(+record.singleShowDuration)}分钟
                                                         </div>
                                                         <div className='item'>
                                                             <div className="title">开始售票时间：</div>
@@ -321,7 +321,7 @@ class ProductManage extends Component {
                         okText='确认添加'
                         onOk={() => {
                             let _data = {
-                                showSubmitFormModal, typeName, showActor, showCoverUrl, singleShowDuration, showName,
+                                typeName, showActor, showCoverUrl, singleShowDuration, showName,
                                 introduction, startTime, address, location, startSaleTime, endSaleTime, theaterName, productInfoList,
                             };
                             dispatch(SubmitProductData(_data, pageNo));

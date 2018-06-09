@@ -497,7 +497,7 @@ let fakeProductContent = (pageNo, pageSize) => ({
         "createTime": 1524133658000,
         "endSaleTime": 1530360000000,
         "extra": "",
-        "introduction": "炒鸡劲爆",
+        "introduction": "简介",
         "location": "武汉",
         "phone": "18627786302",
         "shelfStatus": item === 2 ? '2' : '1',
