@@ -1,5 +1,5 @@
 import './index.css';
-import './business-manage-src/style.less';
+import './blog-index/style.less';
 // react imports
 import React, { Component } from 'react';
 // other modules imports
@@ -11,8 +11,9 @@ import { Button, Icon, message, LocaleProvider } from "antd";
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 
 // components or miscellaneous imports
-import Index from './blog-index/Index';
 import reducers from './blog-index/reducers';
+import Index from './blog-index/Index';
+import Manage from './blog-index/Manage';
 // let or const definitions
 let store = createStore(reducers, applyMiddleware(thunk));
 
@@ -22,7 +23,8 @@ class App extends Component {
     super(props);
     this.state = {
       routeRenderList: [
-        { text: '首页', to: '/', path: '/', component: Index },
+        { text: '首页', to: '/', path: '/', component: Index, },
+        { text: '管理', to: '/manage', path: '/manage', component: Manage, },
       ],
       sideBarHeaderTitle: 'Blog'
     }
@@ -34,14 +36,14 @@ class App extends Component {
         <Provider store={store}>
           <HashRouter>
             <div className='app-container'>
-              <div className="side-bar">
-                <div className="side-bar-header">
+              <div className="header-bar">
+                <div className="header-bar-text">
                   {sideBarHeaderTitle}
                 </div>
-                <ul className="menu-item-list">
+                <ul className="menu-list">
                   {
                     routeRenderList.map((item, index) => (
-                      <li key={`menu-item-li-${index}`}>
+                      <li key={`menu-item-li-${item.to}`}>
                         <NavLink
                           to={item.to}
                           exact={item.to === '/'}
@@ -52,32 +54,6 @@ class App extends Component {
                     ))
                   }
                 </ul>
-                <Button
-                  className='log-out-button'
-                  type='primary'
-                  onClick={() => {
-                    fetch('/logout', {
-                      credentials: 'include',
-                      method: 'post'
-                    })
-                      .then(resp => resp.json())
-                      .then(resp => {
-                        let code = resp.code;
-                        switch (code) {
-                          case '1': {
-                            message.success('退出登录成功', 1);
-                            window.location.href = '/';
-                          } break;
-                          default: {
-                            message.error('退出登录失败，请重试', 1);
-                          }
-                        }
-                      })
-                  }}
-                >
-                  <Icon type='logout' />
-                  退出登录
-              </Button>
               </div>
               <div className="content">
                 <Switch>

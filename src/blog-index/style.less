@@ -1,0 +1,76 @@
+@theme-color: #096dd9;
+@font-color: #262626;
+a {
+    color: inherit;
+}
+
+.header-bar {
+    width: 100%;
+    height: 200px;
+    background: #fff;
+    position: relative;
+    color: @font-color;
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, .1);
+    .header-bar-text {
+        padding: 36px 0 24px;
+        font-size: 48px;
+        text-align: center;
+        color: @theme-color;
+    }
+    ul.menu-list {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        li {
+            display: flex;
+            flex: 1;
+            text-align: center;
+            a.menu-item {
+                flex: 1;
+                font-size: 1rem;
+                box-sizing: border-box;
+                border-bottom: 2px solid transparent;
+                padding: 6px 0;
+                line-height: 24px;
+            }
+            a.active-menu-item {
+                color: @theme-color;
+                border-bottom: 2px solid @theme-color;
+            }
+        }
+    }
+    a {
+        text-decoration: none;
+    }
+}
+
+.content {
+    margin: 24px;
+    .run {
+        opacity: 0;
+        transform: translate(24px, 0);
+    }
+    .run-in {
+        opacity: 1;
+        transform: translate(0, 0);
+        animation: _fade_in .3s linear;
+    }
+}
+
+@keyframes _fade_in {
+    from {
+        opacity: 0;
+        transform: translate(24px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
