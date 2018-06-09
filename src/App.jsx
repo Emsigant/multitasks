@@ -14,6 +14,8 @@ import zhCN from 'antd/lib/locale-provider/zh_CN';
 import reducers from './blog-index/reducers';
 import Index from './blog-index/Index';
 import Manage from './blog-index/Manage';
+
+
 // let or const definitions
 let store = createStore(reducers, applyMiddleware(thunk));
 
@@ -36,39 +38,46 @@ class App extends Component {
         <Provider store={store}>
           <HashRouter>
             <div className='app-container'>
-              <div className="header-bar">
-                <div className="header-bar-text">
-                  {sideBarHeaderTitle}
+              <div className="app">
+                <div className="header-bar">
+                  <div className="app-header">
+                    <div className="header-bar-text">
+                      {sideBarHeaderTitle}
+                    </div>
+                    
+                    <ul className="menu-list">
+                      {
+                        routeRenderList.map((item, index) => (
+                          <li key={`menu-item-li-${item.to}`}>
+                            <NavLink
+                              to={item.to}
+                              exact={item.to === '/'}
+                              className='menu-item'
+                              activeClassName='active-menu-item'
+                            >{item.text}</NavLink>
+                          </li>
+                        ))
+                      }
+                    </ul>
+                    <input type="text" placeholder='搜索'/>
+                  </div>
                 </div>
-                <ul className="menu-list">
-                  {
-                    routeRenderList.map((item, index) => (
-                      <li key={`menu-item-li-${item.to}`}>
-                        <NavLink
-                          to={item.to}
-                          exact={item.to === '/'}
-                          className='menu-item'
-                          activeClassName='active-menu-item'
-                        >{item.text}</NavLink>
-                      </li>
-                    ))
-                  }
-                </ul>
+                <div className="content">
+                  <Switch>
+                    {
+                      routeRenderList.map((item, index) => (
+                        <Route
+                          key={`route-${index}`}
+                          path={item.path}
+                          exact={item.path === '/'}
+                          component={item.component}
+                        />
+                      ))
+                    }
+                  </Switch>
+                </div>
               </div>
-              <div className="content">
-                <Switch>
-                  {
-                    routeRenderList.map((item, index) => (
-                      <Route
-                        key={`route-${index}`}
-                        path={item.path}
-                        exact={item.path === '/'}
-                        component={item.component}
-                      />
-                    ))
-                  }
-                </Switch>
-              </div>
+
             </div>
           </HashRouter>
         </Provider>

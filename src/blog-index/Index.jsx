@@ -3,6 +3,7 @@ import redux from 'redux';
 import { connect } from 'react-redux';
 
 import { FetchArticleList } from './actions';
+import avatar from './avatar.jpg';
 
 class Index extends Component {
 	constructor(p) {
@@ -10,6 +11,7 @@ class Index extends Component {
 		this.state = {
 			_aq: this.props._aq,
 		}
+		this.timeout = [];
 	}
 	componentDidMount() {
 		this.props.dispatch(FetchArticleList());
@@ -18,26 +20,36 @@ class Index extends Component {
 		console.log(this.refs);
 		if (Object.keys(this.refs).length > 0) {
 			for (let i = 0; i < Object.keys(this.refs).length; i++) {
-				setTimeout(() => {
+				this.timeout.push(setTimeout(() => {
 					console.log('change', i);
 					this.refs[Object.keys(this.refs)[i]].className = 'run-in';
-				}, i * 100);
-
+				}, i * 100));
 			}
 		}
+	}
+	componentWillUnmount() {
+		this.timeout = [];
 	}
 	render() {
 		let { data, status, _aq, } = this.props;
 		return (
-			<div>
+			<div className='content-wrapper'>
+				<div className="bio">
+					<img src={avatar} />
+					<div className="nickname">Emsigant</div>
+					<div className="email"> <a href="mailto:emsigant@qq.com">emsigant@qq.com</a></div>
+				</div>
 				{status === 'pending' ? 'loading' : ''}
-				{status === 'resolved' ?
-					data.map((item, index) => (
-						<div key={'article-' + item.title} className={_aq[index]} ref={'article' + index}>
-							{item.title}
-						</div>
-					))
-					: ''}
+				<div className="a-list">
+					{status === 'resolved' ?
+						data.map((item, index) => (
+							<div key={'article-' + item.title} className={_aq[index]} ref={'article' + index}>
+								<div className='title'><a href="">{item.title}</a></div>
+								<div className='date'>{item.date + '更新'}</div>
+							</div>
+						))
+						: ''}
+				</div>
 			</div>
 		)
 	}
