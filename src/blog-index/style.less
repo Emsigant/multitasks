@@ -41,7 +41,7 @@ a {
         .header-bar-text {
             flex: none;
             width: @bio-width;
-            margin-right: @header-padding * 1.5;
+            margin-right: @header-padding * 2;
             line-height: @header-height - 2 * @header-padding;
             height: @header-height - 2 * @header-padding;
             padding: @header-padding 0;
@@ -90,7 +90,7 @@ a {
         flex-direction: row;
         .bio {
             width: @bio-width;
-            margin-right: @header-padding * 1.5;
+            margin-right: @header-padding * 2;
             flex: none;
             display: flex;
             flex-direction: column;
@@ -149,5 +149,17 @@ a {
     to {
         opacity: 1;
         transform: translate(0, 0);
+    }
+}
+.simple-anchor-list {
+    display: flex;
+    flex-direction: column;
+    a {
+        margin: 9px 0;
+        color: @font-color;
+    }
+    a:hover {
+        color: @theme-color;
+        text-decoration: underline;
     }
 }

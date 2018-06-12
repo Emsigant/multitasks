@@ -17,11 +17,9 @@ class Index extends Component {
 		this.props.dispatch(FetchArticleList());
 	}
 	componentDidUpdate() {
-		console.log(this.refs);
 		if (Object.keys(this.refs).length > 0) {
 			for (let i = 0; i < Object.keys(this.refs).length; i++) {
 				this.timeout.push(setTimeout(() => {
-					console.log('change', i);
 					this.refs[Object.keys(this.refs)[i]].className = 'run-in';
 				}, i * 100));
 			}
@@ -44,7 +42,7 @@ class Index extends Component {
 					{status === 'resolved' ?
 						data.map((item, index) => (
 							<div key={'article-' + item.title} className={_aq[index]} ref={'article' + index}>
-								<div className='title'><a href="">{item.title}</a></div>
+								<div className='title'><a href={(item.articleId ? '/article/' + item.articleId : '')}>{item.title || item.articleTitle}</a></div>
 								<div className='date'>{item.date + '更新'}</div>
 							</div>
 						))

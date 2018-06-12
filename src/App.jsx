@@ -26,7 +26,7 @@ class App extends Component {
     this.state = {
       routeRenderList: [
         { text: '首页', to: '/', path: '/', component: Index, },
-        { text: '管理', to: '/manage', path: '/manage', component: Manage, },
+        { text: '其他', to: '/other', path: '/other', component: Manage, },
       ],
       sideBarHeaderTitle: 'Blog'
     }
