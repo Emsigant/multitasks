@@ -20,6 +20,7 @@ function Index(state, action) {
                 return {
                     ...state,
                     status: action.status,
+                    lastStatusUpdateTimeStamp: new Date().getTime(),
                 }
             }
         default:
@@ -27,6 +28,7 @@ function Index(state, action) {
                 return {
                     data: [],
                     status: 'init',
+                    lastStatusUpdateTimeStamp: 0,
                 }
             }
     }
